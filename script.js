@@ -1,21 +1,15 @@
 import { Octokit } from 'https://cdn.skypack.dev/@octokit/rest';
 
+// connects us on the backend
 const octokit = new Octokit({
     auth: Secret.API_Token,
     userAgent: "Jeff's Stats",
     baseUrl: 'https://api.github.com',
 })
 
-// const repoActivity = await octokit.request('GET /repos/{owner}/{repo}/stats/commit_activity', {
-//     owner: 'jpatterson933',
-//     repo: 'resume'
-// })
-//     .then((res) => {
-//         console.log(res);
-//     })
-
+// grabs specific repository
 octokit
-    .paginate("GET /repos/{owner}/{repo}/stats/commit_activity", {
+    .paginate("GET /repos/{owner}/{repo}", {
         owner: "jpatterson933",
         repo: "resume",
     })
