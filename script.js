@@ -19,16 +19,16 @@ class Repository {
         this.url = url;
     }
 
-    logInfo () {
-        console.log("testing")
+    logInfo() {
+        // console.log("testing")
     }
 
-    showRepoNames () {
+    showRepoNames() {
         // const list = $("#repo-list");
         list.append(this.name);
     }
 
-    repositoryCard () {
+    repositoryCard() {
         const repoCardWrapper = $("#repo-cards");
         const card = `<div id="card">
                 <h1>${this.name}</h1>
@@ -44,8 +44,9 @@ class Repository {
 };
 
 
-const repositories = await octokit.request('GET /user/repos?page=1&per_page=1000', { type: 'owner'});
-console.log(repositories.data)
+const repositories = await octokit.request('GET /user/repos?page=1&per_page=1000', { type: 'owner' });
+// shows all repo data
+// console.log(repositories.data)
 const repoArray = [];
 
 const repoConstructor = (data) => {
@@ -57,14 +58,13 @@ const repoConstructor = (data) => {
         let splitIso = d.created_at.split("T")[0];
         let month = splitIso.split("-")[1];
         let year = splitIso.split("-")[0];
-        console.log(month + " " + year)
+        // console.log(month + " " + year)
         // console.log(d.id)
         const repoList = new Repository(d.id, d.name, d.created_at, d.description, d.pushed_at, d.svn_url);
-        console.log(repoList)
+        // console.log(repoList)
         repoArray.push(repoList);
     }
 };
-
 
 repoConstructor(repositories.data);
 
@@ -78,17 +78,57 @@ octokit
     })
     .then((res) => {
 
-        console.log(res)
+        // console.log(res)
     });
 /*--------------------------------------------------------------- */
+
 // returns languages of specific repository in bytes - 1 byte is enough to hold about 1 typed character, e.g. 'b' or 'X' or '$'
-octokit
-    .paginate("GET /repos/{owner}/{repo}/languages", {
-        owner: "jpatterson933",
-        repo: "resume",
-    })
-    .then((res) => {
+const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: "resume" });
+console.log(languages.data, "lang here")
+let langData = languages.data;
+
+// here we get the total bytes of all languages added
+let total = 0;
+const getTotal = () => {
+    for (const lang in langData) {
+        total += Number(langData[lang])
+        console.log(total)
+    }
+};
+
+getTotal();
+
+const getPercentage = () => {
+    
+
+    for (const lang in langData) {
+        let percentage = (Number(langData[lang])) / total;
+
+        console.log(percentage, "percentage?")
+
+    }
+    
+}
+
+getPercentage();
 
 
-        console.log(res)
-    });
+/// works
+const languagePieChart = new Chart("repo-lang-stats", {
+    type: "pie",
+    data: {
+        labels: ["x", "y", "z"],
+        datasets: [{
+            backgroundColor: ["green", "blue", "red"],
+            data: [25, 25, 50]
+        }]
+    },
+    options: {
+        title: {
+            display: true,
+            text: "Testing Pie Graph"
+        }
+    }
+});
+
+
