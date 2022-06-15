@@ -7,8 +7,68 @@ const octokit = new Octokit({
     baseUrl: 'https://api.github.com',
 });
 
+const date = new Date()
+
+class Repository {
+    constructor(id, name, createdAt, description, lastCommit, url) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.lastCommit = new Date(lastCommit);
+        this.url = url;
+    }
+
+    logInfo () {
+        console.log("testing")
+    }
+
+    showRepoNames () {
+        // const list = $("#repo-list");
+        list.append(this.name);
+    }
+
+    repositoryCard () {
+        const repoCardWrapper = $("#repo-cards");
+        const card = `<div id="card">
+                <h1>${this.name}</h1>
+                <p>${this.createdAt}</p>
+                <p>${this.description}</p>
+                <p>${this.lastCommit}</p>
+                <p><a href="${this.url}" target="_blank">Check me out!</a></p>
+            </div>
+            `
+
+        repoCardWrapper.append(card);
+    }
+};
+
+
 const repositories = await octokit.request('GET /user/repos?page=1&per_page=1000', { type: 'owner'});
 console.log(repositories.data)
+const repoArray = [];
+
+const repoConstructor = (data) => {
+
+    for (let i = 0; i < data.length; i++) {
+
+
+        let d = data[i];
+        let splitIso = d.created_at.split("T")[0];
+        let month = splitIso.split("-")[1];
+        let year = splitIso.split("-")[0];
+        console.log(month + " " + year)
+        // console.log(d.id)
+        const repoList = new Repository(d.id, d.name, d.created_at, d.description, d.pushed_at, d.svn_url);
+        console.log(repoList)
+        repoArray.push(repoList);
+    }
+};
+
+
+repoConstructor(repositories.data);
+
+repoArray[1].repositoryCard();
 
 // grabs specific repository
 octokit
