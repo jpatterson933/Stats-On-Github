@@ -43,6 +43,16 @@ class Repository {
     }
 };
 
+class Language {
+    constructor (language, percentage, totalBytes) {
+
+        this.language = language;
+        this.percentage = percentage;
+        this.totalBytes = totalBytes;
+
+    }
+}
+
 
 const repositories = await octokit.request('GET /user/repos?page=1&per_page=1000', { type: 'owner' });
 // shows all repo data
@@ -79,7 +89,7 @@ octokit
     })
     .then((res) => {
 
-        // console.log(res)
+        console.log(res)
     });
 /*--------------------------------------------------------------- */
 
@@ -101,53 +111,82 @@ const getRepoLanguage = async (repos) => {
 // uncomment to run function above;
 // getRepoLanguage(repoArray);
 
+
+
 const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: "resume" });
 let langData = languages.data;
+
+console.log(langData, "lang data")
 
 // here we get the total bytes of all languages added
 let total = 0;
 const getTotal = async (langData) => {
     for (const lang in langData) {
         // lang is the name of the language being used
-        console.log(lang)
+        console.log(lang, "get total lang")
         total += Number(langData[lang])
         // will console log total until the loop is finished 
-        console.log(total)
+        console.log(total, "get total total")
+
+
     }
 };
 // we can change langdata to something shorter using same function variable
 getTotal(langData);
-
+const languageArray = [];
 // this will loop through the languages
 const getPercentage = () => {
     for (const lang in langData) {
         // this is our language name
-        console.log(lang)
+        console.log(lang);
+        console.log(langData[lang], "lang data");
         // this calculates the percantage by taking the value, turning it into a number, dividing by total from getTotal(); multiplying by 100 and gettting a percentage to the second decimal to the right and then adding a % symbol
         let percentage = (((Number(langData[lang])) / total) * 100).toFixed(2) + "%";
-        // our percenatage
-        console.log(percentage)
+        // our percentage
+        console.log(percentage);
+
+        const languageList = new Language(lang, percentage, langData[lang]);
+
+        languageArray.push(languageList);
     }
 };
-// this is the funciton above
+// this is the function above
 getPercentage();
 
+console.log(languageArray[0]);
 
 
-/// works - this is in the works by is essnetially a way to create a pie chart
-const languagePieChart = new Chart("repo-lang-stats", {
-    type: "pie",
-    data: {
-        labels: ["x", "y", "z"],
-        datasets: [{
-            backgroundColor: ["green", "blue", "red"],
-            data: [25, 25, 50]
-        }]
-    },
-    options: {
-        title: {
-            display: true,
-            text: "Testing Pie Graph"
-        }
+
+const createChart = () => {
+    // let backgroundColor = [];
+    let data = [];
+    let labels = [];
+
+    for(let i = 0; i < languageArray.length; i++) {
+        data.push(Number(languageArray[i].totalBytes))
+        labels.push(languageArray[i].language)
     }
-});
+
+    /// works - this is in the works by is essnetially a way to create a pie chart
+    const languagePieChart = new Chart("repo-lang-stats", {
+        type: "pie",
+        data: {
+            labels: labels,
+            datasets: [{
+                backgroundColor: ["red", "blue", "green", "yellow"],
+                data: data
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Resume"
+            }
+        }
+    });
+
+}
+
+createChart();
+
+
