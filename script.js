@@ -7,6 +7,7 @@ const octokit = new Octokit({
     baseUrl: 'https://api.github.com',
 });
 
+// set a new date object
 const date = new Date()
 // our repository class
 class Repository {
@@ -19,48 +20,47 @@ class Repository {
         this.url = url;
     }
 
-    logInfo() {
-        // console.log("testing")
-    }
 
-    showRepoNames() {
-        // const list = $("#repo-list");
-        list.append(this.name);
+    // this is the 
+    displayRepos() {
+        const repoList = $("#repo-list");
+        const button = `<div id="${this.id}" class="repo-btn" name="${this.name}">${this.name}</div>`
+        repoList.append(button);
+
+        
     }
 
     repositoryCard() {
         const repoCardWrapper = $("#repo-cards");
         const card = `<div id="card">
-                <h1>${this.name}</h1>
-                <p>${this.createdAt}</p>
-                <p>${this.description}</p>
-                <p>${this.lastCommit}</p>
-                <p><a href="${this.url}" target="_blank">Check me out!</a></p>
-            </div>
-            `
+                        <h1>${this.name}</h1>
+                        <p>${this.createdAt}</p>
+                        <p>${this.description}</p>
+                        <p>${this.lastCommit}</p>
+                        <p><a href="${this.url}" target="_blank">Check me out!</a></p>
+                      </div>
+                    `
 
         repoCardWrapper.append(card);
     }
 };
 
+
 class Language {
     constructor (language, percentage, totalBytes) {
-
         this.language = language;
         this.percentage = percentage;
         this.totalBytes = totalBytes;
-
     }
 }
 
 
-const repositories = await octokit.request('GET /user/repos?page=1&per_page=1000', { type: 'owner' });
+const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
 // shows all repo data
 // console.log(repositories.data)
 const repoArray = [];
 
-const repoConstructor = (data) => {
-
+const repoClassCreator = (data) => {
     for (let i = 0; i < data.length; i++) {
 
         // we are still having date display issues - will add to github issues 6.15.22
@@ -77,9 +77,20 @@ const repoConstructor = (data) => {
     }
 };
 
-repoConstructor(repositories.data);
-
+repoClassCreator(repositories.data);
+// this displays a single repository card - I think this is something I would like displayed on click
 repoArray[1].repositoryCard();
+
+// here we create a nav bar with all repos that have been created for Jeffery william Patterson
+const repoNavBar = () => {
+    for(let i = 0; i < repoArray.length; i++) {
+        repoArray[i].displayRepos();
+
+
+    }
+}
+
+repoNavBar();
 
 // grabs specific repository -- we are not really using this
 octokit
@@ -89,7 +100,7 @@ octokit
     })
     .then((res) => {
 
-        console.log(res)
+        // console.log(res)
     });
 /*--------------------------------------------------------------- */
 
@@ -99,11 +110,11 @@ const getRepoLanguage = async (repos) => {
 
     // this loops through our array - repos = reposArray - this is where everything is stored, we use it to grab the name of all repos I own
     for (let i = 0; i < repos.length; i++) {
-        console.log(repos[i].name)
+        // console.log(repos[i].name)
         
         const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: repos[i].name });
         // if we console.log languages.data it will show all of the data for the languages used
-        console.log(languages)
+        // console.log(languages)
     }
 
 
@@ -111,22 +122,25 @@ const getRepoLanguage = async (repos) => {
 // uncomment to run function above;
 // getRepoLanguage(repoArray);
 
+// list of buttons by class name on screen - think I am coding in circles. Time to sleep 
+const onScreenRepoButtons = document.getElementsByClassName("repo-btn");
+
 
 
 const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: "resume" });
 let langData = languages.data;
 
-console.log(langData, "lang data")
+// console.log(langData, "lang data")
 
 // here we get the total bytes of all languages added
 let total = 0;
 const getTotal = async (langData) => {
     for (const lang in langData) {
         // lang is the name of the language being used
-        console.log(lang, "get total lang")
+        // console.log(lang, "get total lang")
         total += Number(langData[lang])
         // will console log total until the loop is finished 
-        console.log(total, "get total total")
+        // console.log(total, "get total total")
 
 
     }
@@ -138,12 +152,12 @@ const languageArray = [];
 const getPercentage = () => {
     for (const lang in langData) {
         // this is our language name
-        console.log(lang);
-        console.log(langData[lang], "lang data");
+        // console.log(lang);
+        // console.log(langData[lang], "lang data");
         // this calculates the percantage by taking the value, turning it into a number, dividing by total from getTotal(); multiplying by 100 and gettting a percentage to the second decimal to the right and then adding a % symbol
         let percentage = (((Number(langData[lang])) / total) * 100).toFixed(2) + "%";
         // our percentage
-        console.log(percentage);
+        // console.log(percentage);
 
         const languageList = new Language(lang, percentage, langData[lang]);
 
@@ -153,7 +167,7 @@ const getPercentage = () => {
 // this is the function above
 getPercentage();
 
-console.log(languageArray[0]);
+// console.log(languageArray[0]);
 
 
 
@@ -188,5 +202,11 @@ const createChart = () => {
 }
 
 createChart();
+
+const testing = () => {
+    console.log("working?")
+}
+
+testing();
 
 

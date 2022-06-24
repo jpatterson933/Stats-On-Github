@@ -1,0 +1,17 @@
+#repo-list {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.repo-btn {
+    font-family: 'Eczar', serif;
+    font-size: 20px;
+    text-align: center;
+    background: rgb(55, 87, 99);
+    border: 1px solid black;
+    border-radius: 6px;
+    color: white;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    cursor: pointer;
+    width: 290px;
+}
