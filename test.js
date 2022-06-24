@@ -21,15 +21,6 @@ class Repository {
     }
 
 
-    // this is the 
-    displayRepos() {
-        const repoList = $("#repo-list");
-        const button = `<div id="${this.id}" class="repo-btn" name="${this.name}">${this.name}</div>`
-        repoList.append(button);
-
-        
-    }
-
     repositoryCard() {
         const repoCardWrapper = $("#repo-cards");
         const card = `<div id="card">
@@ -47,7 +38,7 @@ class Repository {
 
 
 class Language {
-    constructor (language, percentage, totalBytes) {
+    constructor(language, percentage, totalBytes) {
         this.language = language;
         this.percentage = percentage;
         this.totalBytes = totalBytes;
@@ -79,18 +70,8 @@ const repoClassCreator = (data) => {
 
 repoClassCreator(repositories.data);
 // this displays a single repository card - I think this is something I would like displayed on click
-repoArray[1].repositoryCard();
+// repoArray[1].repositoryCard();
 
-// here we create a nav bar with all repos that have been created for Jeffery william Patterson
-const repoNavBar = () => {
-    for(let i = 0; i < repoArray.length; i++) {
-        repoArray[i].displayRepos();
-
-
-    }
-}
-
-repoNavBar();
 
 // grabs specific repository -- we are not really using this
 octokit
@@ -111,7 +92,7 @@ const getRepoLanguage = async (repos) => {
     // this loops through our array - repos = reposArray - this is where everything is stored, we use it to grab the name of all repos I own
     for (let i = 0; i < repos.length; i++) {
         // console.log(repos[i].name)
-        
+
         const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: repos[i].name });
         // if we console.log languages.data it will show all of the data for the languages used
         // console.log(languages)
@@ -176,7 +157,7 @@ const createChart = () => {
     let data = [];
     let labels = [];
 
-    for(let i = 0; i < languageArray.length; i++) {
+    for (let i = 0; i < languageArray.length; i++) {
         data.push(Number(languageArray[i].totalBytes))
         labels.push(languageArray[i].language)
     }
@@ -202,11 +183,3 @@ const createChart = () => {
 }
 
 createChart();
-
-const testing = () => {
-    console.log("working?")
-}
-
-testing();
-
-
