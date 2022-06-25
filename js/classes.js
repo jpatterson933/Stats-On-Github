@@ -21,3 +21,11 @@ class Repository {
         repoCardWrapper.append(card);
     }
 };
+
+class Language {
+    constructor(language, percentage, totalBytes) {
+        this.language = language;
+        this.percentage = percentage;
+        this.totalBytes = totalBytes;
+    }
+};
