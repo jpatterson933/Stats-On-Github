@@ -125,34 +125,34 @@ getPercentage();
 
 
 
-const createChart = () => {
-    // let backgroundColor = [];
-    let data = [];
-    let labels = [];
+// const createChart = () => {
+//     // let backgroundColor = [];
+//     let data = [];
+//     let labels = [];
 
-    for (let i = 0; i < languageArray.length; i++) {
-        data.push(Number(languageArray[i].totalBytes))
-        labels.push(languageArray[i].language)
-    }
+//     for (let i = 0; i < languageArray.length; i++) {
+//         data.push(Number(languageArray[i].totalBytes))
+//         labels.push(languageArray[i].language)
+//     }
 
-    /// works - this is in the works by is essnetially a way to create a pie chart
-    const languagePieChart = new Chart("repo-lang-stats", {
-        type: "pie",
-        data: {
-            labels: labels,
-            datasets: [{
-                backgroundColor: ["red", "blue", "green", "yellow"],
-                data: data
-            }]
-        },
-        options: {
-            title: {
-                display: true,
-                text: "Resume"
-            }
-        }
-    });
+//     /// works - this is in the works by is essnetially a way to create a pie chart
+//     const languagePieChart = new Chart("repo-lang-stats", {
+//         type: "pie",
+//         data: {
+//             labels: labels,
+//             datasets: [{
+//                 backgroundColor: ["red", "blue", "green", "yellow"],
+//                 data: data
+//             }]
+//         },
+//         options: {
+//             title: {
+//                 display: true,
+//                 text: "Resume"
+//             }
+//         }
+//     });
 
-}
+// }
 
-createChart();
+// createChart();
