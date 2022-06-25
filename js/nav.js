@@ -55,7 +55,7 @@ repoNavBar();
 
 // this on click allows us to grab the name and id and plug it in but we have not figured out how to make a chart out of the click
 
-$("body").on("click", ".button-list", function (e) {
+$("body").on("click", ".button-list", async function (e) {
     const clickedButtonHolder = $("#clicked-button");
     clickedButtonHolder.empty();
     // ^^^ add button class in selector
@@ -63,10 +63,10 @@ $("body").on("click", ".button-list", function (e) {
     let id = $btn[0].id;
     let clickedBtnRepoName = $btn[0].name;
     console.log(clickedBtnRepoName, "repository with id:", id)
-    clickedButtonHolder.append(clickedBtnRepoName);
+    // clickedButtonHolder.append(clickedBtnRepoName);
 
     // here is our error cannot use await but without await we cannot load data past this point
-    const languages = octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: `${clickedBtnRepoName}` });
+    const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: clickedBtnRepoName });
     let langData = languages.data;
 
     console.log(langData)
