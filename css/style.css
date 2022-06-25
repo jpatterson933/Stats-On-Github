@@ -1,9 +1,22 @@
+/* header styling */
+.intro {
+    padding: 1em;
+    margin: 1px 0;
+    text-align: center;
+    font-size: 2em;
+    background: black;
+    color:rgb(55, 87, 99);
+}
+
+/* nav bar wrapper  */
 #repo-list {
     display: flex;
     flex-wrap: wrap;
 }
 
-.repo-btn {
+/* nav bar button styling  */
+.button-list {
+    margin: 1px auto;
     font-family: 'Eczar', serif;
     font-size: 20px;
     text-align: center;

@@ -10,47 +10,9 @@ const octokit = new Octokit({
 // set a new date object
 const date = new Date()
 // our repository class
-class Repository {
-    constructor(id, name, createdAt, description, lastCommit, url) {
-        this.id = id;
-        this.name = name;
-        this.createdAt = createdAt;
-        this.description = description;
-        this.lastCommit = new Date(lastCommit);
-        this.url = url;
-    }
-
-
-    repositoryCard() {
-        const repoCardWrapper = $("#repo-cards");
-        const card = `<div id="card">
-                        <h1>${this.name}</h1>
-                        <p>${this.createdAt}</p>
-                        <p>${this.description}</p>
-                        <p>${this.lastCommit}</p>
-                        <p><a href="${this.url}" target="_blank">Check me out!</a></p>
-                      </div>
-                    `
-
-        repoCardWrapper.append(card);
-    }
-};
-
-
-class Language {
-    constructor(language, percentage, totalBytes) {
-        this.language = language;
-        this.percentage = percentage;
-        this.totalBytes = totalBytes;
-    }
-}
-
-
 const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
-// shows all repo data
-// console.log(repositories.data)
-const repoArray = [];
 
+const repoArray = [];
 const repoClassCreator = (data) => {
     for (let i = 0; i < data.length; i++) {
 
@@ -69,8 +31,19 @@ const repoClassCreator = (data) => {
 };
 
 repoClassCreator(repositories.data);
+
+
+
+class Language {
+    constructor(language, percentage, totalBytes) {
+        this.language = language;
+        this.percentage = percentage;
+        this.totalBytes = totalBytes;
+    }
+}
+
 // this displays a single repository card - I think this is something I would like displayed on click
-// repoArray[1].repositoryCard();
+repoArray[1].repositoryCard();
 
 
 // grabs specific repository -- we are not really using this

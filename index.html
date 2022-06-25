@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Reset CSS -->
+    <link rel="stylesheet" href="./css/reset.css">
 
     <!-- fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,25 +17,28 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-    
+
     <!-- script.js - javascript - changed type to module so modules work from skypack-->
-    <script type="module" src="nav.js"></script>
+    <script type="module" src="./js/nav.js"></script>
+    <script src="./js/repoClass.js"></script>
+
+
 
     <!-- Style Sheets -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./css/style.css">
 
     <title>Jeffery Patterson's Github Stats</title>
 </head>
 
 <body>
-    <header>
+    <header class="intro">
         <h1>Jeffery Patterson's Github Stats</h1>
     </header>
     <nav>
         <div id="repo-list">
-
         </div>
     </nav>
+    <div id="clicked-button"></div>
     <div id="display-repos">
 
 
@@ -50,7 +55,7 @@
 
 
     <script src="utils.js"></script>
-    <script type="module" src="test.js"></script>
+    <script type="module" src="./js/test.js"></script>
 
 
 </body>
