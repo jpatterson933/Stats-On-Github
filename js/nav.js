@@ -135,8 +135,14 @@ const createChart = (list, btnName) => {
     // createChart Variable: languageArray, clickedBtnRepoName
     for (let i = 0; i < list.length; i++) {
         data.push(Number(list[i].totalBytes))
-        labels.push(list[i].language)
+        labels.push(list[i].language + " " + list[i].percentage)
     }
+
+    const neonGreen = "rgba(57, 211, 83, 1)";
+    const green = "rgba(38, 166, 65, 1)";
+    const turtleGreen = "rgba(0, 109, 50, 1)";
+    const darkGreen = "rgba(14, 68, 41, 1)";
+
 
     /// works - this is in the works by is essnetially a way to create a pie chart
     const languagePieChart = new Chart("repo-lang-stats", {
@@ -144,7 +150,8 @@ const createChart = (list, btnName) => {
         data: {
             labels: labels,
             datasets: [{
-                backgroundColor: ["#39d353", "#26a641", "#006d32", "#0e4429"],
+                backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
+                hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
                 data: data
             }]
         },

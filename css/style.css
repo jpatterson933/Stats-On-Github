@@ -1,27 +1,37 @@
+body {
+    background-color: black;
+}
+
 /* header styling */
 .intro {
     padding: 1em;
-    margin: 1px 0;
+    border: 1px dashed;
+    margin: 10px;
     text-align: center;
     font-size: 2em;
     background: black;
     color: #39d353;
 }
 
+#main {
+    display: flex;
+}
+
+
 /* nav bar wrapper  */
 #repo-list {
-    display: flex;
-    flex-wrap: wrap;
+
+    width: 50%;
 }
 
 /* nav bar button styling  */
 .button-list {
-    margin: 1px auto;
+    margin: 2px 20px;
     font-family: 'Eczar', serif;
     font-size: 20px;
     text-align: center;
     background: rgb(55, 87, 99);
-    border: 1px solid black;
+    border: 1px solid rgba(57, 211, 83, 1);
     border-radius: 6px;
     color: white;
     box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
@@ -29,7 +39,13 @@
     width: 290px;
 }
 
+.button-list:hover {
+    background-color: rgba(14, 68, 41, 1);
+    box-shadow: 0px 0px 25px 9px rgb(14 68 41);
+    transition: 0.3s;
+}
+
 #repo-lang-stats {
-    width: 100%;
-    max-width: 700px
+    height: 400px;
+    width: 800px;
 }
