@@ -149,6 +149,7 @@ const createChart = (list, btnName) => {
         type: "pie",
         data: {
             labels: labels,
+            
             datasets: [{
                 backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
                 hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
@@ -159,7 +160,14 @@ const createChart = (list, btnName) => {
             title: {
                 display: true,
                 text: btnName
+            },
+            plugins: {
+                dataLabels: {
+                    color: "white"
+                }
+
             }
+            
         }
     });
 }

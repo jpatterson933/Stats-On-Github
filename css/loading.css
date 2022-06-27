@@ -1,0 +1,67 @@
+:root {
+    --position: absolute;
+    --loadingColor: rgba(57, 211, 83, 1);
+    --box: 50px;
+    --radius: 8px;
+    --animateType: spin;
+    --animateTime: 2s;
+    --animateLength: infinite;
+  }
+
+.box {
+    position: var(--position);
+    background-color: var(--loadingColor);
+    width: var(--box);
+    height: var(--box);
+    border-radius: var(--radius);
+    animation-name: var(--animateType);
+    animation-delay: var(--animateTime);
+    animation-duration: var(--animateTime);
+    animation-iteration-count: var(--animateLength);
+    top: 34px;
+}
+.box-two {
+    position: var(--position);
+    background-color: var(--loadingColor);
+    width: var(--box);
+    height: var(--box);
+    border-radius: var(--radius);
+    animation-name: var(--animateType);
+    animation-delay: var(--animateTime);
+    animation-duration: var(--animateTime);
+    animation-iteration-count: var(--animateLength);
+    top: 34px;
+    right: 40px;
+}
+
+#innerbox {
+    position: relative;
+    border-radius: 50px;
+    width: 45px;
+    height: 45px;
+    background-color: rgba(0, 0, 0, 1);
+    /* kind of makes it looks like its rolling forward at 2.62px */
+    margin: 2.62px;
+
+}
+
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(90deg)
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(90deg)
+    }
+}
