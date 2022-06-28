@@ -67,7 +67,7 @@ const createCanvasElement = () => {
 // this on click allows us to grab the name and id and plug it in but we have not figured out how to make a chart out of the click
 
 $("body").on("click", ".button-list", async function (e) {
-
+    console.log(window.screen.width)
     console.log(e.type, 'event');
     console.log(this, 'this')
 
@@ -131,6 +131,8 @@ $("body").on("click", ".button-list", async function (e) {
 
 // our create chart function 
 const createChart = (list, btnName) => {
+    const screenWidth = window.screen.width;
+
     // empty array to store data in the for loop
     let data = [];
     // empty array to store labels in the for loop below
@@ -150,10 +152,18 @@ const createChart = (list, btnName) => {
 
     // global style short hand
     let globalStyle = Chart.defaults.global
+    let titleSize = 0;
 
+    if (screenWidth >= 750) {
+        globalStyle.defaultFontSize = 22;
+        titleSize = 25;
 
+    } else if (screenWidth <= 750) {
+        globalStyle.defaultFontSize = 10;
+        titleSize = 12;
+
+    }
     // global styles for Chart
-    globalStyle.defaultFontSize = 22;
     // i don't think this works
     // globalStyle.defaultFont = `'Eczar', serif`;
     globalStyle.defaultColor = 'white';
@@ -179,7 +189,7 @@ const createChart = (list, btnName) => {
                 display: true,
                 text: btnName,
                 fontColor: 'white',
-                fontSize: 25
+                fontSize: titleSize
                 
             },
             legend: {
