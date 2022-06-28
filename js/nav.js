@@ -87,8 +87,15 @@ $("body").on("click", ".button-list", async function (e) {
     // here is our error cannot use await but without await we cannot load data past this point
     const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: clickedBtnRepoName });
     let langData = languages.data;
+
+    // trying to create some type of "loading data thing here but not working"
+    // if (langData === true) {
+    //     console.log("data showing")
+    // } else if (langData === false) {
+    //     console.log("still loading")
+    // }
     
-    console.log(langData)
+    console.log(langData, "lang")
     
     // here we get the total bytes of all languages added
     let total = 0;
