@@ -1,5 +1,6 @@
 body {
     background-color: black;
+    font: 'Eczar', serif;
 }
 
 /* header styling */
@@ -52,10 +53,23 @@ body {
 /* chart will stay on screen  */
 #pie-chart {
     position: fixed;
-    right: 0;
+    right: 114px;
 }
 
 #repo-lang-stats {
     height: 30em;
     width: 60em;
+    border-radius: 138px;
+    background-color: rgba(14, 68, 41, 0.4);
 }
+
+@media only screen and (max-width: 600px) {
+    #pie-chart {
+        position: relative;
+       
+    }
+    #repo-lang-stats {
+        height: 300px;
+        width: 600px;
+    }
+  }

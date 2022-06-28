@@ -122,15 +122,18 @@ $("body").on("click", ".button-list", async function (e) {
     // this is the function above
     getPercentage(langData);
     
-
+    // we create the chart
     createChart(languageArray, clickedBtnRepoName);
     
 
     
 });
 
+// our create chart function 
 const createChart = (list, btnName) => {
+    // empty array to store data in the for loop
     let data = [];
+    // empty array to store labels in the for loop below
     let labels = [];
     // createChart Variable: languageArray, clickedBtnRepoName
     for (let i = 0; i < list.length; i++) {
@@ -138,34 +141,52 @@ const createChart = (list, btnName) => {
         labels.push(list[i].language + " " + list[i].percentage)
     }
 
+
+    // short hand for multi use colors
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
     const darkGreen = "rgba(14, 68, 41, 1)";
 
+    // global style short hand
+    let globalStyle = Chart.defaults.global
 
+
+    // global styles for Chart
+    globalStyle.defaultFontSize = 22;
+    // i don't think this works
+    // globalStyle.defaultFont = `'Eczar', serif`;
+    globalStyle.defaultColor = 'white';
     /// works - this is in the works by is essnetially a way to create a pie chart
     const languagePieChart = new Chart("repo-lang-stats", {
-        type: "pie",
+        type: "doughnut",
         data: {
             labels: labels,
             
             datasets: [{
                 backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
                 hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
+                borderWidth: 2,
+                borderColor: [green, turtleGreen, darkGreen, neonGreen],
+                hoverBorderWidth: 6,
+                hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
+
                 data: data
             }]
         },
         options: {
             title: {
                 display: true,
-                text: btnName
+                text: btnName,
+                fontColor: 'white',
+                fontSize: 25
+                
             },
-            plugins: {
-                dataLabels: {
-                    color: "white"
+            legend: {
+                position: 'left',
+                labels: {
+                    fontColor: 'white'
                 }
-
             }
             
         }
