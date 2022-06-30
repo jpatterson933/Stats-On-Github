@@ -72,12 +72,16 @@ body {
 
     /* nav bar wrapper  */
     #repo-list {
-        width: 50%;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        width: 14em;
+        height: 17em;
     }
 
     #my-links {
-        width: 20%;
+        width: 100%;
         margin-bottom: 12em;
+        overflow: auto;
     }
 
     /* nav bar button styling  */
