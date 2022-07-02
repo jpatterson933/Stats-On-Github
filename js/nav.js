@@ -25,9 +25,11 @@ const pageLoading = (element) => {
 // this is our page loading function
 pageLoading(loader);
 
+// const API_Token = jobs.<job_id>.secrets.<API_Token>
+
 // connects us on the backend to our github api - token expires in 30 or 90 days - just check github
 const octokit = new Octokit({
-    auth: secrets.API_Token,
+    auth: $({secrets: API_Token}),
     userAgent: "Jeff's Stats",
     baseUrl: 'https://api.github.com',
 });
