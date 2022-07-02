@@ -1,44 +1,34 @@
+/* multi use variables */
 :root {
-    --position: absolute;
-    --loadingColor: rgba(57, 211, 83, 1);
     --box: 50px;
-    --radius: 8px;
-    --animateType: spin;
+    --innerBox: 45px;
     --animateTime: 2s;
-    --animateLength: infinite;
-  }
-
-.box {
-    position: var(--position);
-    background-color: var(--loadingColor);
-    width: var(--box);
-    height: var(--box);
-    border-radius: var(--radius);
-    animation-name: var(--animateType);
-    animation-delay: var(--animateTime);
-    animation-duration: var(--animateTime);
-    animation-iteration-count: var(--animateLength);
-    top: 34px;
 }
+
+.box,
 .box-two {
-    position: var(--position);
-    background-color: var(--loadingColor);
+    position: absolute;
+    background-color: rgba(57, 211, 83, 1);
     width: var(--box);
     height: var(--box);
-    border-radius: var(--radius);
-    animation-name: var(--animateType);
+    border-radius: 8px;
+    animation-name: spin;
     animation-delay: var(--animateTime);
     animation-duration: var(--animateTime);
-    animation-iteration-count: var(--animateLength);
+    animation-iteration-count: infinite;
     top: 34px;
+
+}
+
+.box-two {
     right: 40px;
 }
 
 #innerbox {
     position: relative;
-    border-radius: 50px;
-    width: 45px;
-    height: 45px;
+    border-radius: var(--box);
+    width: var(--innerBox);
+    height: var(--innerBox);
     background-color: rgba(0, 0, 0, 1);
     /* kind of makes it looks like its rolling forward at 2.62px */
     margin: 2.62px;

@@ -6,53 +6,36 @@ const octokit = new Octokit({
     userAgent: "Jeff's Stats",
     baseUrl: 'https://api.github.com',
 });
-
-class RepoButton {
-    constructor(id, name) {
-        this.id = id;
-        this.name = name;
-    }
-
-    // this is the 
-    displayRepos() {
-        const repoList = $("#repo-list");
-        const button = `<button id="${this.id}" type="button" class="button-list" name="${this.name}">${this.name}</button>`
-        repoList.append(button);
-    }
-
-};
-
-
-const repoArray = [];
-
+// api request to grab Jeff's list of all repositories at 100 per page
 const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
-// shows all repo data
-// console.log(repositories.data)
 const repoBtnArray = [];
-
+// a function to create our RepoButton classes - data is the data we grab from const repositories
 const repoButtonCreator = (data) => {
     for (let i = 0; i < data.length; i++) {
         let d = data[i];
-
+        // as we loop through we create a new RepoButton class
         const repoList = new RepoButton(d.id, d.name);
+        // push the new classes of RepoButtons into our empty area const repoBtnArray = []
         repoBtnArray.push(repoList);
     }
 };
-
+// here we run the above function
 repoButtonCreator(repositories.data);
 
 // here we create a nav bar with all repos that have been created for Jeffery william Patterson
 const repoNavBar = () => {
 
     for (let i = 0; i < repoBtnArray.length; i++) {
+        // we loop through the empty arrays and run our displayRepos function that exists in our RepoButton class constructor
         repoBtnArray[i].displayRepos();
     }
 }
+// here we run the above function
 repoNavBar();
-
-
+// our function to create a new canvas as well as all associated html elements
 const createCanvasElement = () => {
     const chartWrapper = $("#pie-chart");
+    // we empty our html element and clear it before replacing with new one
     chartWrapper.empty();
     // create canvas pie chart
     const pieChart = document.createElement("canvas");
@@ -60,6 +43,7 @@ const createCanvasElement = () => {
     const id = document.createAttribute("id");
     // Set the value of the class attribute:
     id.value = "repo-lang-stats";
+
     pieChart.setAttributeNode(id);
     chartWrapper.append(pieChart);
 }
@@ -67,36 +51,23 @@ const createCanvasElement = () => {
 // this on click allows us to grab the name and id and plug it in but we have not figured out how to make a chart out of the click
 
 $("body").on("click", ".button-list", async function (e) {
-    console.log(window.screen.width)
-    console.log(e.type, 'event');
-    console.log(this, 'this')
-
-
-        
-        createCanvasElement();
-        // empty then create then append our canvas element
-        const clickedButtonHolder = $("#clicked-button");
-        clickedButtonHolder.empty();
-        // ^^^ add button class in selector
-        let $btn = $(this) /* button event occurs on */
-        let id = $btn[0].id;
-        let clickedBtnRepoName = $btn[0].name;
-        console.log(clickedBtnRepoName, "repository with id:", id)
+    createCanvasElement();
+    // empty then create then append our canvas element
+    const clickedButtonHolder = $("#clicked-button");
+    clickedButtonHolder.empty();
+    // ^^^ add button class in selector
+    let $btn = $(this) /* button event occurs on */
+    let id = $btn[0].id;
+    let clickedBtnRepoName = $btn[0].name;
+    // console.log(clickedBtnRepoName, "repository with id:", id)
     // clickedButtonHolder.append(clickedBtnRepoName);
 
     // here is our error cannot use await but without await we cannot load data past this point
     const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: clickedBtnRepoName });
     let langData = languages.data;
 
-    // trying to create some type of "loading data thing here but not working"
-    // if (langData === true) {
-    //     console.log("data showing")
-    // } else if (langData === false) {
-    //     console.log("still loading")
-    // }
-    
-    console.log(langData, "lang")
-    
+    // console.log(langData, "lang")
+
     // here we get the total bytes of all languages added
     let total = 0;
     const getTotal = async (langData) => {
@@ -108,13 +79,13 @@ $("body").on("click", ".button-list", async function (e) {
             // console.log(total, "get total total")
         }
     };
-    
+
     // we can change langdata to something shorter using same function variable
     getTotal(langData);
 
     // empty languages array that we later append the list of all languages classes
     const languageArray = [];
-    
+
     // this will loop through the languages
     const getPercentage = (langData) => {
         for (const lang in langData) {
@@ -128,18 +99,13 @@ $("body").on("click", ".button-list", async function (e) {
     };
     // this is the function above
     getPercentage(langData);
-    
     // we create the chart
     createChart(languageArray, clickedBtnRepoName);
-    
-
-    
 });
 
 // our create chart function 
 const createChart = (list, btnName) => {
     const screenWidth = window.screen.width;
-
     // empty array to store data in the for loop
     let data = [];
     // empty array to store labels in the for loop below
@@ -149,8 +115,6 @@ const createChart = (list, btnName) => {
         data.push(Number(list[i].totalBytes))
         labels.push(list[i].language + " " + list[i].percentage)
     }
-
-
     // short hand for multi use colors
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
@@ -160,7 +124,7 @@ const createChart = (list, btnName) => {
     // global style short hand
     let globalStyle = Chart.defaults.global
     let titleSize = 0;
-
+    // here we are setting chart font size and title size based off of screen width
     if (screenWidth >= 750) {
         globalStyle.defaultFontSize = 22;
         titleSize = 25;
@@ -171,7 +135,6 @@ const createChart = (list, btnName) => {
 
     }
     // global styles for Chart
-    // i don't think this works
     // globalStyle.defaultFont = `'Eczar', serif`;
     globalStyle.defaultColor = 'white';
     /// works - this is in the works by is essnetially a way to create a pie chart
@@ -179,7 +142,7 @@ const createChart = (list, btnName) => {
         type: "doughnut",
         data: {
             labels: labels,
-            
+
             datasets: [{
                 backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
                 hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
@@ -197,7 +160,7 @@ const createChart = (list, btnName) => {
                 text: btnName,
                 fontColor: 'white',
                 fontSize: titleSize
-                
+
             },
             legend: {
                 position: 'left',
@@ -205,16 +168,7 @@ const createChart = (list, btnName) => {
                     fontColor: 'white'
                 }
             }
-            
+
         }
     });
 }
-
-/* if (!context || !canvas) {
-    // The given item is not a compatible context2d element, let's return before finalizing
-    // the chart initialization but after setting basic chart / controller properties that
-    // can help to figure out that the chart is not valid (e.g chart.canvas !== null);
-    // https://github.com/chartjs/Chart.js/issues/2807
-    console.error("Failed to create chart: can't acquire context from the given item");
-    return;
-*/

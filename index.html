@@ -12,21 +12,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Eczar&display=swap" rel="stylesheet">
-    
+
     <!-- Style Sheets -->
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/loading.css">
-    
+
+    <!-- script that holds are javascript classes -->
+    <script src="./js/classes.js"></script>
+    <!-- script that holds rest of js in module format so webpack works-->
     <script type="module" src="./js/nav.js"></script>
     <!-- jquery link -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--Chart.js script file links -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
-
-    <script src="./js/classes.js"></script>
-    
-    <!-- script.js - javascript - changed type to module so modules work from skypack-->
-    
     <title>Jeffery Patterson's Github Stats</title>
 </head>
 
@@ -46,23 +44,11 @@
         <div id="my-links">
             <div id="repo-list"></div>
         </div>
-        <div id="pie-chart"></div>
+        <aside id="pie-chart"></aside>
     </main>
-
-    <!-- <div id="clicked-button"></div> -->
-    <!-- <div id="display-repos"> -->
-        
     </div>
-
-
     <div id="repo-cards"></div>
-
-    <!-- <canvas id="repo-lang-stats"></canvas> -->
-
     <script src="utils.js"></script>
-    <!-- <script type="module" src="./js/test.js"></script> -->
-
-
 </body>
 
 </html>
