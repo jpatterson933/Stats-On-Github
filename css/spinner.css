@@ -1,0 +1,43 @@
+/* multi use variables */
+:root {
+    --box: 50px;
+    --innerBox: 45px;
+    --animateTime: 2s;
+}
+
+.box,
+.box-two {
+    position: absolute;
+    background-color: rgba(57, 211, 83, 1);
+    width: var(--box);
+    height: var(--box);
+    border-radius: 8px;
+    animation-name: spin;
+    animation-delay: var(--animateTime);
+    animation-duration: var(--animateTime);
+    animation-iteration-count: infinite;
+    top: 34px;
+}
+
+.box-two {
+    right: 40px;
+}
+
+#innerbox {
+    position: relative;
+    border-radius: var(--box);
+    width: var(--innerBox);
+    height: var(--innerBox);
+    background-color: rgba(0, 0, 0, 1);
+    /* kind of makes it looks like its rolling forward at 2.62px */
+    margin: 2.62px;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0);
+    }
+    to {
+        transform: rotate(90deg)
+    }
+}

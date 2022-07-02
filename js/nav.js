@@ -1,5 +1,30 @@
 import { Octokit } from 'https://cdn.skypack.dev/@octokit/rest';
 
+// Page loader
+const loader = document.getElementById("loader");
+// html element for chart loader
+const chartLoader = document.getElementById("chart-loader");
+chartLoader.style.display = "none";
+
+// this is our chart loading function
+const chartLoading = (element, show) => {
+    element.style.display = show;
+    element.style.position = "fixed";
+}
+
+// page loading function
+const pageLoading = (element) => {
+    if ($(document).ready()) {
+        element.style.display = "none";
+    } else {
+        element.style.display = "block";
+        element.style.position = "absolute";
+    }
+}
+
+// this is our page loading function
+pageLoading(loader);
+
 // connects us on the backend to our github api - token expires in 30 or 90 days - just check github
 const octokit = new Octokit({
     auth: Secret.API_Token,
@@ -9,6 +34,7 @@ const octokit = new Octokit({
 // api request to grab Jeff's list of all repositories at 100 per page
 const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
 const repoBtnArray = [];
+
 // a function to create our RepoButton classes - data is the data we grab from const repositories
 const repoButtonCreator = (data) => {
     for (let i = 0; i < data.length; i++) {
@@ -22,9 +48,8 @@ const repoButtonCreator = (data) => {
 // here we run the above function
 repoButtonCreator(repositories.data);
 
-// here we create a nav bar with all repos that have been created for Jeffery william Patterson
+// here we create a side bar with all repos that have been created for Jeffery william Patterson
 const repoNavBar = () => {
-
     for (let i = 0; i < repoBtnArray.length; i++) {
         // we loop through the empty arrays and run our displayRepos function that exists in our RepoButton class constructor
         repoBtnArray[i].displayRepos();
@@ -51,6 +76,7 @@ const createCanvasElement = () => {
 // this on click allows us to grab the name and id and plug it in but we have not figured out how to make a chart out of the click
 
 $("body").on("click", ".button-list", async function (e) {
+    chartLoading(chartLoader, "block")
     createCanvasElement();
     // empty then create then append our canvas element
     const clickedButtonHolder = $("#clicked-button");
@@ -101,6 +127,7 @@ $("body").on("click", ".button-list", async function (e) {
     getPercentage(langData);
     // we create the chart
     createChart(languageArray, clickedBtnRepoName);
+    chartLoading(chartLoader, "none")
 });
 
 // our create chart function 
@@ -171,4 +198,4 @@ const createChart = (list, btnName) => {
 
         }
     });
-}
+};

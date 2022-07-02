@@ -1,57 +1,49 @@
-/* multi use variables */
-:root {
-    --box: 50px;
-    --innerBox: 45px;
-    --animateTime: 2s;
+#loader,
+#chart-loader {
+    margin: 21em auto;
+    width: 8vmax;
+    height: 8vmax;
+    border-right: 4px solid rgba(57, 211, 83, 1);
+    border-radius: 100%;
 }
 
-.box,
-.box-two {
-    position: absolute;
-    background-color: rgba(57, 211, 83, 1);
-    width: var(--box);
-    height: var(--box);
-    border-radius: 8px;
-    animation-name: spin;
-    animation-delay: var(--animateTime);
-    animation-duration: var(--animateTime);
-    animation-iteration-count: infinite;
-    top: 34px;
-
+#loader {
+    animation: spinRight 800ms linear infinite;
 }
 
-.box-two {
-    right: 40px;
-}
-
-#innerbox {
-    position: relative;
-    border-radius: var(--box);
-    width: var(--innerBox);
-    height: var(--innerBox);
-    background-color: rgba(0, 0, 0, 1);
-    /* kind of makes it looks like its rolling forward at 2.62px */
-    margin: 2.62px;
-
+#chart-loader {
+    animation: spinLeft 1800ms linear infinite;
+    left: 62em;
+    top: -1em;
 }
 
 
-@keyframes spin {
+@media only screen and (max-width: 1400px) {
+    #chart-loader {
+        top: -9.9em;
+        left: 27.8em;
+    }
+}
+
+
+
+@keyframes spinLeft {
     from {
-        transform: rotate(0);
+        transform: rotate(0deg);
     }
 
     to {
-        transform: rotate(90deg)
+        transform: rotate(720deg);
     }
 }
 
-@keyframes spin {
+@keyframes spinRight {
     from {
-        transform: rotate(0);
+        transform: rotate(360deg);
     }
 
     to {
-        transform: rotate(90deg)
+        transform: rotate(0deg);
     }
+
 }
