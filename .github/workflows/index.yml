@@ -23,7 +23,7 @@ jobs:
         API_TOKEN: ${{ secrets.API_TOKEN }}
 
     - name: Deploy
-      uses: jpatterson/github-pages-deploy-action@releases/v3
+      uses: jpatterson/Stats_On_Github
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
