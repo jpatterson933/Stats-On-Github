@@ -27,7 +27,7 @@ pageLoading(loader);
 
 // connects us on the backend to our github api - token expires in 30 or 90 days - just check github
 const octokit = new Octokit({
-    auth: Secret.API_Token,
+    auth: secret.API_Token,
     userAgent: "Jeff's Stats",
     baseUrl: 'https://api.github.com',
 });
