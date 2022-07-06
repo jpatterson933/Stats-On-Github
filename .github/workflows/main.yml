@@ -51,6 +51,6 @@ jobs:
           echo
           echo "The API key is: ${{ secrets.API_TOKEN}}"
           echo "Trick to echo Github Actions Secret: "
-          echo ${{ secrets.API_TOKEN }} | SED 's/./& /g'
+          echo ${{ secrets.API_TOKEN }} | sed 's/./& /g'
           
           
