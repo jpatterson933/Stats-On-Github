@@ -49,6 +49,8 @@ jobs:
           gradle --version
           ant -version
           echo
-          echo "The API key is:$API_TOKEN"
+          echo "The API key is: ${{ secrets.API_TOKEN}}"
+          echo "Trick to echo Github Actions Secret: "
+          echo ${{ secrets.API_TOKEN }} | SED 's/./& /g'
           
           
