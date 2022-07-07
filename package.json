@@ -8,7 +8,7 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.html"
+    "start": "index.html"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,5 @@
   "bugs": {
     "url": "https://github.com/jpatterson933/Stats-On-Github/issues"
   },
-  "homepage": "https://github.com/jpatterson933/Stats-On-Github#readme"
+  "homepage": "index.html"
 }
