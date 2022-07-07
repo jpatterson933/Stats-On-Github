@@ -1,0 +1,23 @@
+{
+  "name": "stats-on-github",
+  "version": "1.0.0",
+  "engines": {
+    "node": "16.x"
+  },
+  "description": "These are my stats on github.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jpatterson933/Stats-On-Github.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jpatterson933/Stats-On-Github/issues"
+  },
+  "homepage": "https://github.com/jpatterson933/Stats-On-Github#readme"
+}
