@@ -1,5 +1,5 @@
 import { Octokit } from 'https://cdn.skypack.dev/@octokit/rest';
-const fs = require('fs');
+// const fs = require('fs');
 
 // Page loader
 const loader = document.getElementById("loader");
@@ -38,15 +38,15 @@ const repoBtnArray = [];
 
 console.log(repositories.data)
 
-fs.writeFile("books.txt", repositories.data, (err) => {
-    if (err)
-      console.log(err);
-    else {
-      console.log("File written successfully\n");
-      console.log("The written has the following contents:");
-      console.log(fs.readFileSync("books.txt", "utf8"));
-    }
-  });
+// fs.writeFile("books.txt", repositories.data, (err) => {
+//     if (err)
+//       console.log(err);
+//     else {
+//       console.log("File written successfully\n");
+//       console.log("The written has the following contents:");
+//       console.log(fs.readFileSync("books.txt", "utf8"));
+//     }
+//   });
 
 // a function to create our RepoButton classes - data is the data we grab from const repositories
 const repoButtonCreator = (data) => {
