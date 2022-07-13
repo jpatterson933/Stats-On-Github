@@ -60,8 +60,6 @@ const repoGrab = async () => {
   const languageGraphDataArray = [];
   const gatherLanguageData = async (data) => {
 
-
-
     for (let i = 0; i < data.length; i++) {
       let d = data[i];
       const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: d.name });
@@ -72,7 +70,7 @@ const repoGrab = async () => {
 
     }
 
-    fs.writeFile("chartData.js", JSON.stringify(languageGraphDataArray), (err) => {
+    fs.writeFile("chartData.json", JSON.stringify(languageGraphDataArray), (err) => {
       if (err)
         console.log(err);
       else {
@@ -96,7 +94,7 @@ const repoGrab = async () => {
 
 
 
-  fs.writeFile("repoData.js", JSON.stringify(repoBtnArray), (err) => {
+  fs.writeFile("repoData.json", JSON.stringify(repoBtnArray), (err) => {
     if (err)
       console.log(err);
     else {
