@@ -75,8 +75,10 @@ const repoGrab = async () => {
       // percentage of repos that have been loop through
       let percentageTest = ((i/data.length)*100).toFixed(2) + "% Complete";
       // print percentage to console letting user know how many repos have been gone through
-      console.log(percentageTest)
-      const langDataChart = new LanguagePieChartData(d.name, langData)
+      console.log(percentageTest);
+      // create new class instances here
+      const langDataChart = new LanguagePieChartData(d.name, langData);
+      // push into empty array
       languageGraphDataArray.push(langDataChart);
     }
 
@@ -84,7 +86,7 @@ const repoGrab = async () => {
     writeToFile("chartData.json", languageGraphDataArray);
   };
   // gathering data
-  gatherLanguageData(repoBtnArray)
+  gatherLanguageData(repoBtnArray);
   // writing data to file
   writeToFile("repoData.json", repoBtnArray);
 };
