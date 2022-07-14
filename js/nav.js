@@ -1,11 +1,6 @@
-import { Octokit } from 'https://cdn.skypack.dev/@octokit/rest';
-// const fs = require('fs');
-
 // Page loader
 const loader = document.getElementById("loader");
-// html element for chart loader
-const chartLoader = document.getElementById("chart-loader");
-chartLoader.style.display = "none";
+
 
 // this is our chart loading function
 const chartLoading = (element, show) => {
@@ -26,40 +21,7 @@ const pageLoading = (element) => {
 // this is our page loading function
 pageLoading(loader);
 
-// connects us on the backend to our github api - token expires in 30 or 90 days - just check github
-const octokit = new Octokit({
-    auth: Secret.API_Token,
-    userAgent: "Jeff's Stats",
-    baseUrl: 'https://api.github.com',
-});
-// api request to grab Jeff's list of all repositories at 100 per page
-const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
-const repoBtnArray = [];
 
-console.log(repositories.data)
-
-// fs.writeFile("books.txt", repositories.data, (err) => {
-//     if (err)
-//       console.log(err);
-//     else {
-//       console.log("File written successfully\n");
-//       console.log("The written has the following contents:");
-//       console.log(fs.readFileSync("books.txt", "utf8"));
-//     }
-//   });
-
-// a function to create our RepoButton classes - data is the data we grab from const repositories
-const repoButtonCreator = (data) => {
-    for (let i = 0; i < data.length; i++) {
-        let d = data[i];
-        // as we loop through we create a new RepoButton class
-        const repoList = new RepoButton(d.id, d.name);
-        // push the new classes of RepoButtons into our empty area const repoBtnArray = []
-        repoBtnArray.push(repoList);
-    }
-};
-// here we run the above function
-repoButtonCreator(repositories.data);
 
 // here we create a side bar with all repos that have been created for Jeffery william Patterson
 const repoNavBar = () => {
@@ -70,6 +32,8 @@ const repoNavBar = () => {
 }
 // here we run the above function
 repoNavBar();
+
+
 // our function to create a new canvas as well as all associated html elements
 const createCanvasElement = () => {
     const chartWrapper = $("#pie-chart");
