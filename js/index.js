@@ -53,7 +53,7 @@ const createCanvasElement = () => {
 function grabRepoLanguageStats(buttonClicked) {
 
     let repoName;
-
+    // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
     for (let i = 0; i < languageData.length; i++) {
         if (languageData[i].repoName === buttonClicked) {
             repoName = languageData[i];
@@ -85,7 +85,7 @@ function getLangPercent (langBytes, total) {
     for (const [key, value] of Object.entries(langBytes)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
 
-        const languageList = new Language(key, percentage, total);
+        const languageList = new Language(key, percentage, value);
         
         // console.log(percentage);
         langList.push(languageList);
@@ -119,8 +119,8 @@ $("body").on("click", ".button-list", function (e) {
 
 
 
-    console.log(repoStats.languageData)
-    console.log(clickedBtnName)
+    // console.log(repoStats.languageData)
+    // console.log(clickedBtnName)
     // gets our byte total from repo stats
     let repoByteTotal = getTotal(repoLanguages);
     console.log(repoByteTotal)
@@ -148,7 +148,8 @@ const createChart = (list, btnName) => {
     let labels = [];
     // createChart Variable: languageArray, clickedBtnRepoName
     for (let i = 0; i < list.length; i++) {
-        console.log(list)
+        console.log(list, "list inside chart")
+        // total bytes here is refering to the total bytes of that specific language
         data.push(Number(list[i].totalBytes))
         labels.push(list[i].language + " " + list[i].percentage)
     }
