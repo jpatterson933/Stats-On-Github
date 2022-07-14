@@ -2,6 +2,14 @@
 import repoData from "./json/repoData.json" assert { type: "json" };
 import languageData from "./json/chartData.json" assert { type: "json" };
 
+class Language {
+    constructor(language, percentage, totalBytes) {
+        this.language = language;
+        this.percentage = percentage;
+        this.totalBytes = totalBytes;
+    }
+};
+
 // html element for chart loader
 const chartLoader = document.getElementById("chart-loader");
 chartLoader.style.display = "none";
@@ -72,18 +80,20 @@ function getTotal(langBytes) {
     return total;
 };
 
-function getPercentage (langBytes, total) {
-    const languageStats = [];
-
+function getLangPercent (langBytes, total) {
+    const langList = [];
     for (const [key, value] of Object.entries(langBytes)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-        console.log(percentage)
-        languageStats.push(percentage);
+
+        const languageList = new Language(key, percentage, total);
+        
+        // console.log(percentage);
+        langList.push(languageList);
     }
 
-    console.log(languageStats)
+    // console.log(langPercent)
 
-    return languageStats;
+    return langList;
 
 
 }
@@ -114,14 +124,15 @@ $("body").on("click", ".button-list", function (e) {
     // gets our byte total from repo stats
     let repoByteTotal = getTotal(repoLanguages);
     console.log(repoByteTotal)
-
-    let repoPercentagePerLang = getPercentage(repoLanguages, repoByteTotal);
+    // function that assign an array of the percentages for the repo that was clicked on
+    let repoPercentagePerLang = getLangPercent(repoLanguages, repoByteTotal);
 
     console.log(repoPercentagePerLang);
 
 
 
-    // createChart(repoStats.languageData, clickedBtnName);
+    createChart(repoPercentagePerLang, clickedBtnName);
+    
 
 
 
