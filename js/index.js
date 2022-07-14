@@ -70,6 +70,20 @@ function getTotal(langBytes) {
     //   console.log(total)
     // return total
     return total;
+};
+
+function getPercentage (langBytes, total) {
+    const languageStats = [];
+
+    for (const [key, value] of Object.entries(langBytes)) {
+        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
+        console.log(percentage)
+        languageStats.push(percentage);
+    }
+
+    console.log(languageStats)
+
+    return languageStats;
 
 
 }
@@ -77,24 +91,33 @@ function getTotal(langBytes) {
 $("body").on("click", ".button-list", function (e) {
 
     createCanvasElement();
-
-    const clickedButton = $("#clicked-button");
-
-    clickedButton.empty();
+    // create a clicked button THIS HAS BEEN COMMENTED OUT
+    // const clickedButton = $("#clicked-button");
+    // empty our clicked button
+    // clickedButton.empty();
+    // this is our clicked button $(this) and assignet to $btn
     let $btn = $(this);
     let clickedBtnName = $btn[0].name;
-
+    // takes the clicked button above as a parameter and finds the associated repository
     let repoStats = grabRepoLanguageStats(clickedBtnName);
+    // assignt the repository grabbed above to repoLanguages to shorten variable name
     let repoLanguages = repoStats.languageData;
+
+
+
 
 
 
 
     console.log(repoStats.languageData)
     console.log(clickedBtnName)
-
+    // gets our byte total from repo stats
     let repoByteTotal = getTotal(repoLanguages);
     console.log(repoByteTotal)
+
+    let repoPercentagePerLang = getPercentage(repoLanguages, repoByteTotal);
+
+    console.log(repoPercentagePerLang);
 
 
 
