@@ -1,5 +1,7 @@
 # Stats on Github
 
+### [Live Application](https://jpatterson933.github.io/Stats-On-Github/)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
@@ -7,11 +9,10 @@
 # Table of Contents
 1. [License MIT](#license-information)
 2. [Description](#application-description)
-4. [Usage](#application-usage)
-5. [Languages Used](#languages-used)
-6. [Dependencies Used](#dependencies-used)
-9. [Known Issues/Errors](#known-issues/errors)
-10. [Questions](#questions)
+3. [Languages Used](#languages-used)
+4. [Dependencies Used](#dependencies-used)
+5. [Known Issues/Errors](#known-issues/errors)
+6. [Questions](#questions)
 
 # License Information
 
@@ -26,19 +27,17 @@ this software or any code within this application.
 
 # Application Description
 
+This page will show you the language usage stats for each one of my repositories on github. 
+
+Last Updated: 7/13/22 - Updates will take place randomly.
+
 I created a server.js file and pulled all my data from github that I was able to store into json files using fs. I then went and created an index.js that would utilize this json data on the front end. This became a much quicker way to create this program as I only need to pull and store data a single time for it to showcase my stats.
 
 Using javascript I and graph.js, I then created a site that would show the languages used and the percentage they are used per project.
 
-For the future, I will showcase total bytes that exist on github and what percentage of bytes exist in each project!
+I originally wanted to do an API request every single time a button was clicked but this turned out to be extremely slow. Storing and using JSON data was something I had always wanted to learn to do as I knew it was a quicker method then API calls but I never knew how to do it until this project!
 
 I love to code!
-
-[Back to Top](#table-of-contents)
-
-# Application Usage
-
-This app was built so you can see some cool graphs showcasing my github repositories. 
 
 [Back to Top](#table-of-contents)
 

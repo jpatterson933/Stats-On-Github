@@ -10,14 +10,6 @@ class Language {
     }
 };
 
-// html element for chart loader
-const chartLoader = document.getElementById("chart-loader");
-chartLoader.style.display = "none";
-
-// repo data consists of ids, names and creation date
-// console.log(repoData);
-// console.log(languageData);
-
 function displayRepos(id, name) {
     const repoList = $("#repo-list");
     const button = `<button id="${id}" type="button" class="button-list" name="${name}">${name}</button>`
@@ -50,6 +42,7 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 
+// this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
 function grabRepoLanguageStats(buttonClicked) {
 
     let repoName;
@@ -75,69 +68,40 @@ function getTotal(langBytes) {
         total += Number(value);
     }
 
-    //   console.log(total)
-    // return total
     return total;
 };
 
-function getLangPercent (langBytes, total) {
+function getLangPercent(langBytes, total) {
     const langList = [];
+
     for (const [key, value] of Object.entries(langBytes)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-
         const languageList = new Language(key, percentage, value);
-        
         // console.log(percentage);
         langList.push(languageList);
     }
 
-    // console.log(langPercent)
-
     return langList;
-
-
-}
+};
 
 $("body").on("click", ".button-list", function (e) {
-
+    // function that creates our canvas element
     createCanvasElement();
-    // create a clicked button THIS HAS BEEN COMMENTED OUT
-    // const clickedButton = $("#clicked-button");
-    // empty our clicked button
-    // clickedButton.empty();
-    // this is our clicked button $(this) and assignet to $btn
+    // targeted button that was clicked
     let $btn = $(this);
     let clickedBtnName = $btn[0].name;
     // takes the clicked button above as a parameter and finds the associated repository
     let repoStats = grabRepoLanguageStats(clickedBtnName);
     // assignt the repository grabbed above to repoLanguages to shorten variable name
     let repoLanguages = repoStats.languageData;
-
-
-
-
-
-
-
-    // console.log(repoStats.languageData)
-    // console.log(clickedBtnName)
     // gets our byte total from repo stats
     let repoByteTotal = getTotal(repoLanguages);
     console.log(repoByteTotal)
     // function that assign an array of the percentages for the repo that was clicked on
     let repoPercentagePerLang = getLangPercent(repoLanguages, repoByteTotal);
-
-    console.log(repoPercentagePerLang);
-
-
-
+    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
     createChart(repoPercentagePerLang, clickedBtnName);
-    
-
-
-
-
-})
+});
 
 // our create chart function 
 const createChart = (list, btnName) => {
@@ -152,7 +116,7 @@ const createChart = (list, btnName) => {
         // total bytes here is refering to the total bytes of that specific language
         data.push(Number(list[i].totalBytes))
         labels.push(list[i].language + " " + list[i].percentage)
-    }
+    };
     // short hand for multi use colors
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
@@ -171,43 +135,44 @@ const createChart = (list, btnName) => {
         globalStyle.defaultFontSize = 10;
         titleSize = 12;
 
-    }
+    };
     // global styles for Chart
-    // globalStyle.defaultFont = `'Eczar', serif`;
     globalStyle.defaultColor = 'white';
-    /// works - this is in the works by is essnetially a way to create a pie chart
+    // this is where we create a new chart and assign it to the repo-lang-stats id
     const languagePieChart = new Chart("repo-lang-stats", {
+        // type of graph
         type: "doughnut",
         data: {
+            // graph labels
             labels: labels,
 
             datasets: [{
+                // this is where we style our graph
                 backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
                 hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
                 borderWidth: 2,
                 borderColor: [green, turtleGreen, darkGreen, neonGreen],
                 hoverBorderWidth: 6,
                 hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
-
+                // data that is utilizied in graph
                 data: data
             }]
         },
+        // optinos where we show the titles, text is what shows in the title, font color and size
         options: {
             title: {
                 display: true,
                 text: btnName,
                 fontColor: 'white',
                 fontSize: titleSize
-
             },
+            // the legend of the graph, where it should be and the color of the labels
             legend: {
                 position: 'left',
                 labels: {
                     fontColor: 'white'
                 }
             }
-
         }
     });
 };
-
