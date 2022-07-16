@@ -54,12 +54,6 @@ dotenv, express, nodemon, octokit, path
 
 [Back to Top](#table-of-contents)
 
-# Known Issues/Errors
-
-Yes, but currently in the process of being fixed.
-
-[Back to Top](#table-of-contents)
-
 # Questions
 
 If you have any questions that have not been answered, please send me an email: jpatterson933@ucla.edu
