@@ -60,7 +60,8 @@ function grabRepoLanguageStats(buttonClicked) {
 // get total bytes of language
 function getTotal(langBytes) {
     let total = 0;
-    // use Object entires to split object into key value pairs
+    /* for (var variable_name in object_name){ then javascript statement}
+     use Object entires to split object into key value pairs */
     for (const [key, value] of Object.entries(langBytes)) {
         // use console.log() to see the key value pairs
         // console.log(`${key}: ${value}`);
@@ -73,7 +74,7 @@ function getTotal(langBytes) {
 
 function getLangPercent(langBytes, total) {
     const langList = [];
-
+    
     for (const [key, value] of Object.entries(langBytes)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
         const languageList = new Language(key, percentage, value);
