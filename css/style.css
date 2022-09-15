@@ -123,3 +123,19 @@ body {
         /* background-color: rgba(14, 68, 41, 0.4); */
     }
 }
+
+@media only screen and (max-width: 751px) {
+    .box, .box-two {
+        display: none;
+    }
+
+    #repo-list {
+        overflow-y: scroll;
+        /* overflow-x: show; */
+        width: 14em;
+        height: 10em;
+    }
+
+
+
+}
