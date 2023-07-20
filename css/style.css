@@ -20,13 +20,14 @@ body {
 
 #main {
     display: flex;
+    flex-direction: column;
 }
 
 
 /* nav bar wrapper  */
 #repo-list {
-
-    width: 50%;
+    display: flex;
+    flex-direction: column;
 }
 
 #my-links {
@@ -81,10 +82,8 @@ body {
 
     /* nav bar wrapper  */
     #repo-list {
-        overflow-y: scroll;
-        overflow-x: hidden;
-        width: 14em;
-        height: 17em;
+        display: flex;
+        flex-direction: column;
     }
 
     #my-links {

@@ -48,6 +48,7 @@ function grabRepoLanguageStats(buttonClicked) {
     let repoName;
     // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
     for (let i = 0; i < languageData.length; i++) {
+        console.log(languageData)
         if (languageData[i].repoName === buttonClicked) {
             repoName = languageData[i];
             break;

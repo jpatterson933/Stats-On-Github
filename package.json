@@ -7,7 +7,7 @@
   "description": "These are my stats on github.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "nodemon server.js"
   },
   "repository": {
@@ -23,6 +23,7 @@
   "homepage": "https://github.com/jpatterson933/Stats-On-Github#readme",
   "dependencies": {
     "dotenv": "^16.0.1",
+    "jest": "^29.6.1",
     "octokit": "^1.8.1",
     "path": "^0.12.7"
   }
