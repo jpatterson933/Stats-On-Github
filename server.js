@@ -30,37 +30,60 @@ class LanguagePieChartData {
   }
 };
 
-// funciton to write to file that we will use --- TYPE into gitbash node server.js
-function writeToFile (fileName, fileData) {
+// function to write to file that we will use --- TYPE into gitbash node server.js
+function writeToFile(fileName, fileData) {
   fs.writeFile(path.join(__dirname, "/./js/json", fileName), JSON.stringify(fileData), (err) => {
-    if (err)
-      console.log(err);
-    else {
-      console.log("100% of the Data successfully saved in js/json Directory! \n");
-    }
+    err ? console.log(err) : console.log("100% of the Data successfully saved in js/json Directory! \n")
   });
+}
+
+const getRepositoryInfo = async () => {
+  try {
+    const repositoryData = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
+    return repositoryData;
+  } catch (error) {
+    console.error(error);
+  };
+};
+
+const createRepoClassInstance = (data) => {
+  try {
+    const repoClassInstanceArray = [];
+    for (let i = 0; i < data.length; i++) {
+      let eachReposData = data[i];
+      const repoInstance = new RepoData(eachReposData.id, eachReposData.name, eachReposData.created_at);
+      repoClassInstanceArray.push(repoInstance);
+    }
+    return repoClassInstanceArray;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 // MAIN FUNCTION --- This function is what is saving all information to be used in front end file
 const repoGrab = async () => {
-  const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
+  // const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
+  // getRepositoryInfo();
+  const repositoryData = await getRepositoryInfo();
   // Empty array for storing repo Classes
-  const repoClassArray = [];
+  // const repoClassArray = [];
 
 
-  // a function to create our RepoButton classes - data is the data we grab from const repositories
-  const repoClassCreator = (data) => {
-    // loops through data and creates new class instance storeing repo id, name and creation date
-    for (let i = 0; i < data.length; i++) {
-      let d = data[i];
-      // as we loop through we create a new RepoButton class
-      const repoList = new RepoData(d.id, d.name, d.created_at);
-      // push the new classes of RepoButtons into our empty area const repoClassArray = []
-      repoClassArray.push(repoList);
-    }
-  };
+  // // a function to create our RepoButton classes - data is the data we grab from const repositories
+  // const repoClassCreator = (data) => {
+  //   // loops through data and creates new class instance storeing repo id, name and creation date
+  //   for (let i = 0; i < data.length; i++) {
+  //     let d = data[i];
+  //     // as we loop through we create a new RepoButton class
+  //     const repoList = new RepoData(d.id, d.name, d.created_at);
+  //     // push the new classes of RepoButtons into our empty area const repoClassArray = []
+  //     repoClassArray.push(repoList);
+  //   }
+  // };
+
   // Function that grabs repo data dn stores it into RepoData Classes
-  repoClassCreator(repositories.data);
+  // repoClassCreator(repositoryData.data);
+  const repoClassInstanceArray = createRepoClassInstance(repositoryData.data)
   // empty array to store the lanuage data to be used in the graph
   const languageGraphDataArray = [];
   // async function grabbing all language information on each repository
@@ -73,7 +96,7 @@ const repoGrab = async () => {
       // languages.data grabbed in the await octokit request stored in shorter variable name
       let langData = languages.data;
       // percentage of repos that have been loop through
-      let percentageTest = ((i/data.length)*100).toFixed(2) + "% Complete";
+      let percentageTest = ((i / data.length) * 100).toFixed(2) + "% Complete";
       // print percentage to console letting user know how many repos have been gone through
       console.log(percentageTest);
       // create new class instances here
@@ -86,8 +109,8 @@ const repoGrab = async () => {
     writeToFile("chartData.json", languageGraphDataArray);
   };
   // gathering data
-  gatherLanguageData(repoBtnArray);
+  gatherLanguageData(repoClassInstanceArray);
   // writing data to file
-  writeToFile("repoData.json", repoBtnArray);
+  writeToFile("repoData.json", repoClassInstanceArray);
 };
 repoGrab();
