@@ -51,10 +51,10 @@ const createRepoBasicInfoArray = (data) => {
   try {
     const basicRepoInfo = [];
     for (let i = 0; i < data.length; i++) {
-      let {id, name, created_at} = data[i];
+      let { id, name, created_at } = data[i];
       const repoInstance = new BasicRepoData(id, name, created_at);
       basicRepoInfo.push(repoInstance);
-    }
+    };
     return basicRepoInfo;
   } catch (error) {
     console.error(error);
@@ -63,37 +63,29 @@ const createRepoBasicInfoArray = (data) => {
 
 const createRepoLanguageArray = async (repositoryInfo) => {
   try {
-
     const eachReposLanguageInfo = [];
-    for (let i = 0; i < repositoryInfo.length; i++){
+    for (let i = 0; i < repositoryInfo.length; i++) {
       const githubLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
       const languages = await octokit.request(githubLanguageQuery, { owner: 'jpatterson933', repo: repositoryInfo[i].name });
-      
       const percentOfLoopCompleted = ((i / repositoryInfo.length) * 100).toFixed(2) + "% Complete";
       // print to console
       console.log(percentOfLoopCompleted);
-
       const languagesOfRepo = new RepositoryLanguageData(repositoryInfo[i].name, languages.data);
-      
       eachReposLanguageInfo.push(languagesOfRepo);
     }
-
     return eachReposLanguageInfo;
-    
-  } catch (error){
+  } catch (error) {
     console.error(error);
-  }
-}
+  };
+};
 
 // MAIN FUNCTION --- This function is what is saving all information to be used in front end file
 const repoGrab = async () => {
   const repositoryData = await getRepositoryInfo();
   const eachReposBasicInfo = createRepoBasicInfoArray(repositoryData.data)
   const eachReposLanguageInfo = await createRepoLanguageArray(eachReposBasicInfo);
- 
   // writing data to file
   writeToFile("repoData.json", eachReposBasicInfo);
   writeToFile("chartData.json", eachReposLanguageInfo);
-  
 };
 repoGrab();
