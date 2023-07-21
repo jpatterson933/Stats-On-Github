@@ -36,5 +36,12 @@ describe("JSON data has required properties and types", () => {
         });
     });
 
+    test('matching repoName in chartData with repoData', () => {
+        chartData.forEach(({ repoName }) => {
+            const matchingRepo = repoData.find(matchingName => matchingName.name === repoName);
+            expect(matchingRepo).toBeDefined();
+        });
+    });
+
 
 })
