@@ -33,8 +33,8 @@ describe("JSON data has required properties and types", () => {
             // ensure date is same format with T separating data and time
             expect(repository.created).toContain('T');
 
-        })
-    })
+        });
+    });
 
 
 })
