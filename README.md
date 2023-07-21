@@ -49,7 +49,10 @@ HTML, CSS, Javascript, Node.js, Chart.js, jQuery
 
 # Dependencies Used
 
-dotenv, express, nodemon, octokit, path
+    "dotenv": "^16.0.1",
+    "jest": "^29.6.1",
+    "octokit": "^1.8.1",
+    "path": "^0.12.7"
 
 
 [Back to Top](#table-of-contents)
