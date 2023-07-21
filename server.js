@@ -39,8 +39,9 @@ function writeToFile(fileName, fileData) {
 
 const getRepositoryInfo = async () => {
   try {
-    const repositoryData = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
-    return repositoryData;
+    const githubUserReposQuery = 'GET /user/repos?page=1&per_page=100';
+    const userRepoData = await octokit.request(githubUserReposQuery, { type: 'owner' });
+    return userRepoData;
   } catch (error) {
     console.error(error);
   };
@@ -48,36 +49,36 @@ const getRepositoryInfo = async () => {
 
 const createRepoInfoClassArray = (data) => {
   try {
-    const repositoryClassArray = [];
+    const basicRepoInfo = [];
     for (let i = 0; i < data.length; i++) {
-      let eachReposData = data[i];
-      const repoInstance = new RepoData(eachReposData.id, eachReposData.name, eachReposData.created_at);
-      repositoryClassArray.push(repoInstance);
+      let {id, name, created_at} = data[i];
+      const repoInstance = new RepoData(id, name, created_at);
+      basicRepoInfo.push(repoInstance);
     }
-    return repositoryClassArray;
+    return basicRepoInfo;
   } catch (error) {
     console.error(error);
   };
 };
 
-const grabUsedLanguagesForRepository = async (repositoryInfo) => {
+const grabRepoLanguageInfo = async (repositoryInfo) => {
   try {
 
-    const repoLanguageDataInstanceArray = [];
+    const eachReposLanguageInfo = [];
     for (let i = 0; i < repositoryInfo.length; i++){
+      const githubLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
+      const languages = await octokit.request(githubLanguageQuery, { owner: 'jpatterson933', repo: repositoryInfo[i].name });
       
-      const languages = await octokit.request('GET /repos/{owner}/{repo}/languages', { owner: 'jpatterson933', repo: repositoryInfo[i].name });
-      
-      const percentageOfCompletedLoop = ((i / repositoryInfo.length) * 100).toFixed(2) + "% Complete";
+      const percentOfLoopCompleted = ((i / repositoryInfo.length) * 100).toFixed(2) + "% Complete";
       // print to console
-      console.log(percentageOfCompletedLoop);
+      console.log(percentOfLoopCompleted);
 
-      const repoLanguageDataInstance = new LanguagePieChartData(repositoryInfo[i].name, languages.data);
+      const languagesOfRepo = new LanguagePieChartData(repositoryInfo[i].name, languages.data);
       
-      repoLanguageDataInstanceArray.push(repoLanguageDataInstance);
+      eachReposLanguageInfo.push(languagesOfRepo);
     }
 
-    return repoLanguageDataInstanceArray;
+    return eachReposLanguageInfo;
     
   } catch (error){
     console.error(error);
@@ -90,12 +91,12 @@ const repoGrab = async () => {
   // getRepositoryInfo();
   const repositoryData = await getRepositoryInfo();
   // Function that grabs repo data and stores it into RepoData Classes
-  const repoClassInstanceArray = createRepoInfoClassArray(repositoryData.data)
-  const repoLanguageDataInstanceArray = await grabUsedLanguagesForRepository(repoClassInstanceArray);
+  const eachReposBasicInfo = createRepoInfoClassArray(repositoryData.data)
+  const eachReposLanguageInfo = await grabRepoLanguageInfo(eachReposBasicInfo);
  
   // writing data to file
-  writeToFile("repoData.json", repoClassInstanceArray);
-  writeToFile("chartData.json", repoLanguageDataInstanceArray);
+  writeToFile("repoData.json", eachReposBasicInfo);
+  writeToFile("chartData.json", eachReposLanguageInfo);
   
 };
 repoGrab();
