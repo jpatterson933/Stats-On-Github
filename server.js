@@ -69,17 +69,6 @@ const repoGrab = async () => {
   // const repoClassArray = [];
 
 
-  // // a function to create our RepoButton classes - data is the data we grab from const repositories
-  // const repoClassCreator = (data) => {
-  //   // loops through data and creates new class instance storeing repo id, name and creation date
-  //   for (let i = 0; i < data.length; i++) {
-  //     let d = data[i];
-  //     // as we loop through we create a new RepoButton class
-  //     const repoList = new RepoData(d.id, d.name, d.created_at);
-  //     // push the new classes of RepoButtons into our empty area const repoClassArray = []
-  //     repoClassArray.push(repoList);
-  //   }
-  // };
 
   // Function that grabs repo data dn stores it into RepoData Classes
   // repoClassCreator(repositoryData.data);
