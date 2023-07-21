@@ -26,7 +26,12 @@ describe("JSON data has required properties and types", () => {
             expect(repository).toHaveProperty('id');
             expect(repository).toHaveProperty('name');
             expect(repository).toHaveProperty('created');
-
+            // check the types of the properties
+            expect(repository.id).toEqual(expect.any(Number));
+            expect(repository.name).toEqual(expect.any(String));
+            expect(repository.created).toEqual(expect.any(String));
+            // ensure date is same format with T separating data and time
+            expect(repository.created).toContain('T');
 
         })
     })
