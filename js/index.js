@@ -98,7 +98,6 @@ $("body").on("click", ".button-list", function (e) {
     let repoLanguages = repoStats.languageData;
     // gets our byte total from repo stats
     let repoByteTotal = getTotal(repoLanguages);
-    console.log(repoByteTotal)
     // function that assign an array of the percentages for the repo that was clicked on
     let repoPercentagePerLang = getLangPercent(repoLanguages, repoByteTotal);
     // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
