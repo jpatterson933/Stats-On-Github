@@ -15,7 +15,7 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
-class RepoData {
+class BasicRepoData {
   constructor(id, name, created) {
     this.id = id;
     this.name = name;
@@ -23,7 +23,7 @@ class RepoData {
   };
 };
 
-class LanguagePieChartData {
+class RepositoryLanguageData {
   constructor(repoName, languageData) {
     this.repoName = repoName;
     this.languageData = languageData;
@@ -47,12 +47,12 @@ const getRepositoryInfo = async () => {
   };
 };
 
-const createRepoInfoClassArray = (data) => {
+const createRepoBasicInfoArray = (data) => {
   try {
     const basicRepoInfo = [];
     for (let i = 0; i < data.length; i++) {
       let {id, name, created_at} = data[i];
-      const repoInstance = new RepoData(id, name, created_at);
+      const repoInstance = new BasicRepoData(id, name, created_at);
       basicRepoInfo.push(repoInstance);
     }
     return basicRepoInfo;
@@ -61,7 +61,7 @@ const createRepoInfoClassArray = (data) => {
   };
 };
 
-const grabRepoLanguageInfo = async (repositoryInfo) => {
+const createRepoLanguageArray = async (repositoryInfo) => {
   try {
 
     const eachReposLanguageInfo = [];
@@ -73,7 +73,7 @@ const grabRepoLanguageInfo = async (repositoryInfo) => {
       // print to console
       console.log(percentOfLoopCompleted);
 
-      const languagesOfRepo = new LanguagePieChartData(repositoryInfo[i].name, languages.data);
+      const languagesOfRepo = new RepositoryLanguageData(repositoryInfo[i].name, languages.data);
       
       eachReposLanguageInfo.push(languagesOfRepo);
     }
@@ -87,12 +87,9 @@ const grabRepoLanguageInfo = async (repositoryInfo) => {
 
 // MAIN FUNCTION --- This function is what is saving all information to be used in front end file
 const repoGrab = async () => {
-  // const repositories = await octokit.request('GET /user/repos?page=1&per_page=100', { type: 'owner' });
-  // getRepositoryInfo();
   const repositoryData = await getRepositoryInfo();
-  // Function that grabs repo data and stores it into RepoData Classes
-  const eachReposBasicInfo = createRepoInfoClassArray(repositoryData.data)
-  const eachReposLanguageInfo = await grabRepoLanguageInfo(eachReposBasicInfo);
+  const eachReposBasicInfo = createRepoBasicInfoArray(repositoryData.data)
+  const eachReposLanguageInfo = await createRepoLanguageArray(eachReposBasicInfo);
  
   // writing data to file
   writeToFile("repoData.json", eachReposBasicInfo);
