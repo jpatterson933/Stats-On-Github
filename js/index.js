@@ -19,17 +19,10 @@ function countTotalBytesInRepo(languagesByteObjectArray) {
 };
 
 // Issue #24
-
-
 function getLanuagePercentPerRepoFromBytes(languageObject) {
-    
+
     let total = countTotalBytesInRepo(languageObject);
-    /*
-    I am initializeing an empty array
-    Then I am crateing a for loop with the languageObject array
-    then I am looping through the values, changeing them to numb ers and dividing that by the total 
-    Next I am using the Language class to create a 
-    */
+
     const langList = [];
 
     for (const [key, value] of Object.entries(languageObject)) {
@@ -92,7 +85,6 @@ function loadPieGraphOnClick() {
         // targeted button that was clicked
         let $btn = $(this);
         let buttonNameValue = $btn[0].name;
-        console.log(buttonNameValue)
         grabDataForChart(buttonNameValue)
         // return buttonNameValue;
     });
@@ -111,13 +103,11 @@ function returnMatchingJsonObject(buttonNameValue) {
     let repoMatchJsonObject;
     // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
     for (let i = 0; i < languageData.length; i++) {
-        console.log(languageData)
         if (languageData[i].repoName === buttonNameValue) {
             repoMatchJsonObject = languageData[i];
             break;
         }
     };
-    console.log(repoMatchJsonObject, "repo match json object")
     return repoMatchJsonObject;
 };
 
