@@ -59,7 +59,7 @@ function grabRepoLanguageStats(buttonClicked) {
 };
 
 // get total bytes of language
-function getTotal(langBytes) {
+function getTotalRepoLanguageBytes(langBytes) {
     let total = 0;
     /* for (var variable_name in object_name){ then javascript statement}
      use Object entires to split object into key value pairs */
@@ -73,7 +73,7 @@ function getTotal(langBytes) {
     return total;
 };
 
-function getLangPercent(langBytes, total) {
+function getLanuagePercentPerRepoFromBytes(langBytes, total) {
     const langList = [];
     
     for (const [key, value] of Object.entries(langBytes)) {
@@ -86,23 +86,38 @@ function getLangPercent(langBytes, total) {
     return langList;
 };
 
-$("body").on("click", ".button-list", function (e) {
-    // function that creates our canvas element
-    createCanvasElement();
-    // targeted button that was clicked
-    let $btn = $(this);
-    let clickedBtnName = $btn[0].name;
-    // takes the clicked button above as a parameter and finds the associated repository
-    let repoStats = grabRepoLanguageStats(clickedBtnName);
-    // assignt the repository grabbed above to repoLanguages to shorten variable name
-    let repoLanguages = repoStats.languageData;
-    // gets our byte total from repo stats
-    let repoByteTotal = getTotal(repoLanguages);
-    // function that assign an array of the percentages for the repo that was clicked on
-    let repoPercentagePerLang = getLangPercent(repoLanguages, repoByteTotal);
-    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-    createChart(repoPercentagePerLang, clickedBtnName);
-});
+
+function loadPieGraphOnClick() {
+    $("body").on("click", ".button-list", function (e) {
+        // function that creates our canvas element
+        createCanvasElement();
+        // targeted button that was clicked
+        let $btn = $(this);
+        let clickedBtnName = $btn[0].name;
+        // takes the clicked button above as a parameter and finds the associated repository
+        let repoStats = grabRepoLanguageStats(clickedBtnName);
+        // assignt the repository grabbed above to repoLanguages to shorten variable name
+        let repoLanguages = repoStats.languageData;
+        // gets our byte total from repo stats
+        let repoByteTotal = getTotalRepoLanguageBytes(repoLanguages);
+        // function that assign an array of the percentages for the repo that was clicked on
+        let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(repoLanguages, repoByteTotal);
+        // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
+        createChart(repoPercentagePerLang, clickedBtnName);
+    });
+};
+
+loadPieGraphOnClick();
+
+// function 
+const returnArray = (arrayName = []) => {
+    for(let i = 0; i < list.length); i++ {
+        if(arrayName === "data"){
+            arrayName.push(Number(list[i].totalBytes))
+        }
+    }
+}
+
 
 // our create chart function 
 const createChart = (list, btnName) => {
@@ -116,7 +131,7 @@ const createChart = (list, btnName) => {
         console.log(list, "list inside chart")
         // total bytes here is refering to the total bytes of that specific language
         data.push(Number(list[i].totalBytes))
-        labels.push(list[i].language + " " + list[i].percentage)
+        labels.push(`${list[i].language} ${list[i].percentage}`)
     };
     // short hand for multi use colors
     const neonGreen = "rgba(57, 211, 83, 1)";
