@@ -75,7 +75,7 @@ function getTotalRepoLanguageBytes(langBytes) {
 
 function getLanuagePercentPerRepoFromBytes(langBytes, total) {
     const langList = [];
-    
+
     for (const [key, value] of Object.entries(langBytes)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
         const languageList = new Language(key, percentage, value);
@@ -110,11 +110,18 @@ function loadPieGraphOnClick() {
 loadPieGraphOnClick();
 
 // function 
-const returnArray = (arrayName = []) => {
-    for(let i = 0; i < list.length); i++ {
-        if(arrayName === "data"){
-            arrayName.push(Number(list[i].totalBytes))
+const returnArray = (arrayType, newArray, list) => {
+    try {
+        for (let i = 0; i < list.length; i++) {
+            if (arrayType === "data") {
+                newArray.push(Number(list[i].totalBytes));
+            } else {
+                newArray.push(`${list[i].language} ${list[i].percentage}`);
+            }
         }
+        return newArray;
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -122,17 +129,8 @@ const returnArray = (arrayName = []) => {
 // our create chart function 
 const createChart = (list, btnName) => {
     const screenWidth = window.screen.width;
-    // empty array to store data in the for loop
-    let data = [];
-    // empty array to store labels in the for loop below
-    let labels = [];
-    // createChart Variable: languageArray, clickedBtnRepoName
-    for (let i = 0; i < list.length; i++) {
-        console.log(list, "list inside chart")
-        // total bytes here is refering to the total bytes of that specific language
-        data.push(Number(list[i].totalBytes))
-        labels.push(`${list[i].language} ${list[i].percentage}`)
-    };
+    let data = returnArray("data", [], list);
+    let labels = returnArray("labels", [], list);
     // short hand for multi use colors
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
