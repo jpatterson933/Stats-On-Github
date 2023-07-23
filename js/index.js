@@ -9,19 +9,30 @@ class Language {
         this.totalBytes = totalBytes;
     };
 };
+// get total bytes of language
+function countTotalBytesInRepo(languagesByteObjectArray) {
+    let totalBytesInRepo = 0;
+    for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {
+        totalBytesInRepo += Number(bytes);
+    }
+    return totalBytesInRepo;
+};
 
 // Issue #24
 
-function getLanuagePercentPerRepoFromBytes(langBytes, total) {
+
+function getLanuagePercentPerRepoFromBytes(languageObject) {
+    
+    let total = countTotalBytesInRepo(languageObject);
     /*
     I am initializeing an empty array
-    Then I am crateing a for loop with the langBytes array
+    Then I am crateing a for loop with the languageObject array
     then I am looping through the values, changeing them to numb ers and dividing that by the total 
     Next I am using the Language class to create a 
     */
     const langList = [];
 
-    for (const [key, value] of Object.entries(langBytes)) {
+    for (const [key, value] of Object.entries(languageObject)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
         const languagePercentPerProjectArray = new Language(key, percentage, value);
         langList.push(languagePercentPerProjectArray);
@@ -47,6 +58,7 @@ function repoNavBar() {
 // create our side bar
 repoNavBar();
 
+
 // our function to create a new canvas as well as all associated html elements
 const createCanvasElement = () => {
     // grab html element
@@ -63,16 +75,15 @@ const createCanvasElement = () => {
     pieChart.setAttributeNode(id);
     chartWrapper.append(pieChart);
 };
-
-const getButtonName = (event) => {
-    // let $clickedButtenEle = $(this);
-
-    let $btn = $(this);
-    console.log($btn)
-    const buttonNameValue = $btn[0].name;
-    return buttonNameValue;
-
-}
+function grabDataForChart(buttonValue) {
+    // let buttonValue = getButtonNameValue()
+    // assignt the repository grabbed above to repoLanguages to shorten variable name
+    let matchingRepoObject = returnMatchingJsonObject(buttonValue).languageData;
+    // function that assign an array of the percentages for the repo that was clicked on
+    let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(matchingRepoObject);
+    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
+    loadChart(repoPercentagePerLang, buttonValue);
+};
 
 function loadPieGraphOnClick() {
     $("body").on("click", ".button-list", function (e) {
@@ -81,17 +92,18 @@ function loadPieGraphOnClick() {
         // targeted button that was clicked
         let $btn = $(this);
         let buttonNameValue = $btn[0].name;
-        // let buttonNameValue = getButtonName();
-        // assignt the repository grabbed above to repoLanguages to shorten variable name
-        let matchingRepoObject = returnMatchingJsonObject(buttonNameValue).languageData;
-        // gets our byte total from repo stats
-        let repoByteTotal = countTotalBytesInRepo(matchingRepoObject);
-        // function that assign an array of the percentages for the repo that was clicked on
-        let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(matchingRepoObject, repoByteTotal);
-        // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-        loadChart(repoPercentagePerLang, buttonNameValue);
+        console.log(buttonNameValue)
+        grabDataForChart(buttonNameValue)
+        // return buttonNameValue;
     });
 };
+
+loadPieGraphOnClick();
+
+// loadPieGraphOnClick();
+
+
+
 
 // this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
 function returnMatchingJsonObject(buttonNameValue) {
@@ -109,16 +121,7 @@ function returnMatchingJsonObject(buttonNameValue) {
     return repoMatchJsonObject;
 };
 
-// get total bytes of language
-function countTotalBytesInRepo(languagesByteObjectArray) {
-    let totalBytesInRepo = 0;
-    for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {
-        totalBytesInRepo += Number(bytes);
-    }
-    return totalBytesInRepo;
-};
 
-loadPieGraphOnClick();
 
 // function 
 const returnArray = (arrayType, newArray, list) => {
