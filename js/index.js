@@ -103,7 +103,7 @@ function loadPieGraphOnClick() {
         // function that assign an array of the percentages for the repo that was clicked on
         let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(repoLanguages, repoByteTotal);
         // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-        createChart(repoPercentagePerLang, clickedBtnName);
+        loadChart(repoPercentagePerLang, clickedBtnName);
     });
 };
 
@@ -125,10 +125,21 @@ const returnArray = (arrayType, newArray, list) => {
     }
 }
 
+function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
+        // here we are setting chart font size and title size based off of screen width
+        if (screenWidth >= 750) {
+            globalStyle.defaultFontSize = 22;
+            titleSize = 25;
+    
+        } else if (screenWidth <= 750) {
+            globalStyle.defaultFontSize = 10;
+            titleSize = 12;
+    
+        };
+}
 
 // our create chart function 
-const createChart = (list, btnName) => {
-    const screenWidth = window.screen.width;
+const loadChart = (list, btnName) => {
     let data = returnArray("data", [], list);
     let labels = returnArray("labels", [], list);
     // short hand for multi use colors
@@ -140,16 +151,7 @@ const createChart = (list, btnName) => {
     // global style short hand
     let globalStyle = Chart.defaults.global
     let titleSize = 0;
-    // here we are setting chart font size and title size based off of screen width
-    if (screenWidth >= 750) {
-        globalStyle.defaultFontSize = 22;
-        titleSize = 25;
-
-    } else if (screenWidth <= 750) {
-        globalStyle.defaultFontSize = 10;
-        titleSize = 12;
-
-    };
+    setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
     // global styles for Chart
     globalStyle.defaultColor = 'white';
     // this is where we create a new chart and assign it to the repo-lang-stats id
