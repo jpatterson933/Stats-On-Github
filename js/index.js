@@ -171,7 +171,7 @@ const datasetDataOptions = (data, labels) => {
     };
 };
 
-const datasetLabelOptions = (brn, titleSize) => {
+const datasetLabelOptions = (btnName, titleSize) => {
     return {
         title: datasetTitleOptions(btnName, titleSize),
         legend: datasetLegendOptions(),
@@ -181,7 +181,7 @@ const createDonutChart = (btnName, data, labels, titleSize) => {
     const donutChart = new Chart("repo-lang-stats", {
         type: "doughnut",
         data: datasetDataOptions(data, labels),
-        options: datasetDataOptions(),
+        options: datasetLabelOptions(btnName, titleSize),
     });
 
     return donutChart;
