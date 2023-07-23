@@ -138,41 +138,33 @@ function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
         };
 }
 
-// our create chart function 
-const loadChart = (list, btnName) => {
-    let data = returnArray("data", [], list);
-    let labels = returnArray("labels", [], list);
-    // short hand for multi use colors
+function returnDatasetsArray (data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
     const darkGreen = "rgba(14, 68, 41, 1)";
 
-    // global style short hand
-    let globalStyle = Chart.defaults.global
-    let titleSize = 0;
-    setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
-    // global styles for Chart
-    globalStyle.defaultColor = 'white';
-    // this is where we create a new chart and assign it to the repo-lang-stats id
-    const languagePieChart = new Chart("repo-lang-stats", {
+    return [{
+        // this is where we style our graph
+        backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
+        hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
+        borderWidth: 2,
+        borderColor: [green, turtleGreen, darkGreen, neonGreen],
+        hoverBorderWidth: 6,
+        hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
+        // data that is utilizied in graph
+        data: data
+    }]
+}
+
+const createDonutChart = (btnName, data, labels, titleSize) => {
+    const donutChart = new Chart("repo-lang-stats", {
         // type of graph
         type: "doughnut",
         data: {
             // graph labels
             labels: labels,
-
-            datasets: [{
-                // this is where we style our graph
-                backgroundColor: [neonGreen, green, turtleGreen, darkGreen],
-                hoverBackgroundColor: [green, turtleGreen, darkGreen, neonGreen],
-                borderWidth: 2,
-                borderColor: [green, turtleGreen, darkGreen, neonGreen],
-                hoverBorderWidth: 6,
-                hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
-                // data that is utilizied in graph
-                data: data
-            }]
+            datasets: returnDatasetsArray(data)
         },
         // optinos where we show the titles, text is what shows in the title, font color and size
         options: {
@@ -191,4 +183,24 @@ const loadChart = (list, btnName) => {
             }
         }
     });
+
+    return donutChart
+}
+
+// our create chart function 
+const loadChart = (list, btnName) => {
+    let data = returnArray("data", [], list);
+    let labels = returnArray("labels", [], list);
+    // short hand for multi use colors
+
+
+    // global style short hand
+    let globalStyle = Chart.defaults.global
+    let titleSize = 0;
+    setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
+    // global styles for Chart
+    globalStyle.defaultColor = 'white';
+
+
+    createDonutChart(btnName, data, labels, titleSize);
 };
