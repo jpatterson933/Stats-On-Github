@@ -14,41 +14,33 @@ function countTotalBytesInRepo(languagesByteObjectArray) {
     let totalBytesInRepo = 0;
     for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {
         totalBytesInRepo += Number(bytes);
-    }
+    };
     return totalBytesInRepo;
 };
 
 // Issue #24
 function getLanuagePercentPerRepoFromBytes(languageObject) {
-
     let total = countTotalBytesInRepo(languageObject);
-
     const langList = [];
-
     for (const [key, value] of Object.entries(languageObject)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
         const languagePercentPerProjectArray = new Language(key, percentage, value);
         langList.push(languagePercentPerProjectArray);
     }
-
     return langList;
-
 };
-
 
 function displayRepos(id, name) {
     const repoList = $("#repo-list");
     const button = `<button id="${id}" type="button" class="button-list" name="${name}">${name}</button>`;
     repoList.append(button);
 };
-
 function repoNavBar() {
     for (let i = 0; i < repoData.length; i++) {
         // loop through our json data and create buttons
         displayRepos(repoData[i].id, repoData[i].name);
     };
 };
-// create our side bar
 repoNavBar();
 
 
@@ -69,7 +61,6 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 function grabDataForChart(buttonValue) {
-    // let buttonValue = getButtonNameValue()
     // assignt the repository grabbed above to repoLanguages to shorten variable name
     let matchingRepoObject = returnMatchingJsonObject(buttonValue).languageData;
     // function that assign an array of the percentages for the repo that was clicked on
@@ -92,11 +83,6 @@ function loadPieGraphOnClick() {
 
 loadPieGraphOnClick();
 
-// loadPieGraphOnClick();
-
-
-
-
 // this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
 function returnMatchingJsonObject(buttonNameValue) {
 
@@ -106,12 +92,10 @@ function returnMatchingJsonObject(buttonNameValue) {
         if (languageData[i].repoName === buttonNameValue) {
             repoMatchJsonObject = languageData[i];
             break;
-        }
+        };
     };
     return repoMatchJsonObject;
 };
-
-
 
 // function 
 const returnArray = (arrayType, newArray, list) => {
@@ -126,8 +110,8 @@ const returnArray = (arrayType, newArray, list) => {
         return newArray;
     } catch (error) {
         console.error(error);
-    }
-}
+    };
+};
 
 function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
     // here we are setting chart font size and title size based off of screen width
@@ -140,7 +124,7 @@ function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
         titleSize = 12;
 
     };
-}
+};
 
 function datasetStylingOptionsAnd(data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
@@ -158,8 +142,8 @@ function datasetStylingOptionsAnd(data) {
         hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
         // data that is utilizied in graph
         data: data
-    }]
-}
+    }];
+};
 
 const datasetTitleOptions = (btnName, titleSize) => {
     return {
@@ -167,7 +151,7 @@ const datasetTitleOptions = (btnName, titleSize) => {
         text: btnName,
         fontColor: 'white',
         fontSize: titleSize
-    }
+    };
 };
 
 const datasetLegendOptions = () => {
@@ -176,8 +160,8 @@ const datasetLegendOptions = () => {
         labels: {
             fontColor: 'white'
         }
-    }
-}
+    };
+};
 
 const datasetDataOptions = (data, labels) => {
     return {
@@ -187,7 +171,7 @@ const datasetDataOptions = (data, labels) => {
     };
 };
 
-const dataSetOptions = (brn, titleSize) => {
+const datasetLabelOptions = (brn, titleSize) => {
     return {
         title: datasetTitleOptions(btnName, titleSize),
         legend: datasetLegendOptions(),
