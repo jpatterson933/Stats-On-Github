@@ -138,7 +138,7 @@ function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
         };
 }
 
-function returnDatasetsArray (data) {
+function datasetStylingOptionsAnd (data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
@@ -157,45 +157,55 @@ function returnDatasetsArray (data) {
     }]
 }
 
+const datasetTitleOptions = (btnName, titleSize) => {
+    return {
+        display: true,
+        text: btnName,
+        fontColor: 'white',
+        fontSize: titleSize
+    }
+};
+
+const datasetLegendOptions = () => {
+    return {
+        position: 'left',
+        labels: {
+            fontColor: 'white'
+        }
+    }
+}
+
+const datasetDataOptions = (data, labels) => {
+    return {
+        // graph labels
+        labels: labels,
+        datasets: datasetStylingOptionsAnd(data)
+    };
+};
+
+const dataSetOptions = (brn, titleSize)=> {
+    return {
+        title: datasetTitleOptions(btnName, titleSize),
+        legend: datasetLegendOptions(),
+    };
+};
 const createDonutChart = (btnName, data, labels, titleSize) => {
     const donutChart = new Chart("repo-lang-stats", {
-        // type of graph
         type: "doughnut",
-        data: {
-            // graph labels
-            labels: labels,
-            datasets: returnDatasetsArray(data)
-        },
-        // optinos where we show the titles, text is what shows in the title, font color and size
-        options: {
-            title: {
-                display: true,
-                text: btnName,
-                fontColor: 'white',
-                fontSize: titleSize
-            },
-            // the legend of the graph, where it should be and the color of the labels
-            legend: {
-                position: 'left',
-                labels: {
-                    fontColor: 'white'
-                }
-            }
-        }
+        data: datasetDataOptions(data, labels),
+        options: datasetDataOptions(),
     });
 
-    return donutChart
+    return donutChart;
 }
 
 // our create chart function 
 const loadChart = (list, btnName) => {
     let data = returnArray("data", [], list);
     let labels = returnArray("labels", [], list);
-    // short hand for multi use colors
-
 
     // global style short hand
-    let globalStyle = Chart.defaults.global
+    let globalStyle = Chart.defaults.global;
     let titleSize = 0;
     setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
     // global styles for Chart
