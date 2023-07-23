@@ -1,26 +1,48 @@
 // import our json files
 import repoData from "./json/repoData.json" assert { type: "json" };
 import languageData from "./json/chartData.json" assert { type: "json" };
-
+// 1. Language Class is constructed
 class Language {
     constructor(language, percentage, totalBytes) {
         this.language = language;
         this.percentage = percentage;
         this.totalBytes = totalBytes;
-    }
+    };
 };
+
+// Issue #24
+
+function getLanuagePercentPerRepoFromBytes(langBytes, total) {
+    /*
+    I am initializeing an empty array
+    Then I am crateing a for loop with the langBytes array
+    then I am looping through the values, changeing them to numb ers and dividing that by the total 
+    Next I am using the Language class to create a 
+    */
+    const langList = [];
+
+    for (const [key, value] of Object.entries(langBytes)) {
+        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
+        const languagePercentPerProjectArray = new Language(key, percentage, value);
+        langList.push(languagePercentPerProjectArray);
+    }
+
+    return langList;
+
+};
+
 
 function displayRepos(id, name) {
     const repoList = $("#repo-list");
-    const button = `<button id="${id}" type="button" class="button-list" name="${name}">${name}</button>`
+    const button = `<button id="${id}" type="button" class="button-list" name="${name}">${name}</button>`;
     repoList.append(button);
 };
 
 function repoNavBar() {
     for (let i = 0; i < repoData.length; i++) {
         // loop through our json data and create buttons
-        displayRepos(repoData[i].id, repoData[i].name)
-    }
+        displayRepos(repoData[i].id, repoData[i].name);
+    };
 };
 // create our side bar
 repoNavBar();
@@ -42,50 +64,15 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 
-// this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
-function grabRepoLanguageStats(buttonClicked) {
+const getButtonName = (event) => {
+    // let $clickedButtenEle = $(this);
 
-    let repoName;
-    // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
-    for (let i = 0; i < languageData.length; i++) {
-        console.log(languageData)
-        if (languageData[i].repoName === buttonClicked) {
-            repoName = languageData[i];
-            break;
-        }
-    };
+    let $btn = $(this);
+    console.log($btn)
+    const buttonNameValue = $btn[0].name;
+    return buttonNameValue;
 
-    return repoName;
-};
-
-// get total bytes of language
-function getTotalRepoLanguageBytes(langBytes) {
-    let total = 0;
-    /* for (var variable_name in object_name){ then javascript statement}
-     use Object entires to split object into key value pairs */
-    for (const [key, value] of Object.entries(langBytes)) {
-        // use console.log() to see the key value pairs
-        // console.log(`${key}: ${value}`);
-        // as it loops through key value pairs, we add values to total
-        total += Number(value);
-    }
-
-    return total;
-};
-
-function getLanuagePercentPerRepoFromBytes(langBytes, total) {
-    const langList = [];
-
-    for (const [key, value] of Object.entries(langBytes)) {
-        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-        const languageList = new Language(key, percentage, value);
-        // console.log(percentage);
-        langList.push(languageList);
-    }
-
-    return langList;
-};
-
+}
 
 function loadPieGraphOnClick() {
     $("body").on("click", ".button-list", function (e) {
@@ -93,18 +80,42 @@ function loadPieGraphOnClick() {
         createCanvasElement();
         // targeted button that was clicked
         let $btn = $(this);
-        let clickedBtnName = $btn[0].name;
-        // takes the clicked button above as a parameter and finds the associated repository
-        let repoStats = grabRepoLanguageStats(clickedBtnName);
+        let buttonNameValue = $btn[0].name;
+        // let buttonNameValue = getButtonName();
         // assignt the repository grabbed above to repoLanguages to shorten variable name
-        let repoLanguages = repoStats.languageData;
+        let matchingRepoObject = returnMatchingJsonObject(buttonNameValue).languageData;
         // gets our byte total from repo stats
-        let repoByteTotal = getTotalRepoLanguageBytes(repoLanguages);
+        let repoByteTotal = countTotalBytesInRepo(matchingRepoObject);
         // function that assign an array of the percentages for the repo that was clicked on
-        let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(repoLanguages, repoByteTotal);
+        let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(matchingRepoObject, repoByteTotal);
         // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-        loadChart(repoPercentagePerLang, clickedBtnName);
+        loadChart(repoPercentagePerLang, buttonNameValue);
     });
+};
+
+// this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
+function returnMatchingJsonObject(buttonNameValue) {
+
+    let repoMatchJsonObject;
+    // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
+    for (let i = 0; i < languageData.length; i++) {
+        console.log(languageData)
+        if (languageData[i].repoName === buttonNameValue) {
+            repoMatchJsonObject = languageData[i];
+            break;
+        }
+    };
+    console.log(repoMatchJsonObject, "repo match json object")
+    return repoMatchJsonObject;
+};
+
+// get total bytes of language
+function countTotalBytesInRepo(languagesByteObjectArray) {
+    let totalBytesInRepo = 0;
+    for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {
+        totalBytesInRepo += Number(bytes);
+    }
+    return totalBytesInRepo;
 };
 
 loadPieGraphOnClick();
@@ -126,19 +137,19 @@ const returnArray = (arrayType, newArray, list) => {
 }
 
 function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
-        // here we are setting chart font size and title size based off of screen width
-        if (screenWidth >= 750) {
-            globalStyle.defaultFontSize = 22;
-            titleSize = 25;
-    
-        } else if (screenWidth <= 750) {
-            globalStyle.defaultFontSize = 10;
-            titleSize = 12;
-    
-        };
+    // here we are setting chart font size and title size based off of screen width
+    if (screenWidth >= 750) {
+        globalStyle.defaultFontSize = 22;
+        titleSize = 25;
+
+    } else if (screenWidth <= 750) {
+        globalStyle.defaultFontSize = 10;
+        titleSize = 12;
+
+    };
 }
 
-function datasetStylingOptionsAnd (data) {
+function datasetStylingOptionsAnd(data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
@@ -183,7 +194,7 @@ const datasetDataOptions = (data, labels) => {
     };
 };
 
-const dataSetOptions = (brn, titleSize)=> {
+const dataSetOptions = (brn, titleSize) => {
     return {
         title: datasetTitleOptions(btnName, titleSize),
         legend: datasetLegendOptions(),
