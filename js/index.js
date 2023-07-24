@@ -19,15 +19,15 @@ function countTotalBytesInRepo(languagesByteObjectArray) {
 };
 
 // Issue #24
-function getLanuagePercentPerRepoFromBytes(languageObject) {
+function getLanuagesArrayForRepo(languageObject) {
     let total = countTotalBytesInRepo(languageObject);
-    const langList = [];
+    const languageListForRepo = [];
     for (const [key, value] of Object.entries(languageObject)) {
         let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-        const languagePercentPerProjectArray = new Language(key, percentage, value);
-        langList.push(languagePercentPerProjectArray);
+        const languageClassObjectForRepo = new Language(key, percentage, value);
+        languageListForRepo.push(languageClassObjectForRepo);
     }
-    return langList;
+    return languageListForRepo;
 };
 
 function displayRepos(id, name) {
@@ -42,7 +42,6 @@ function repoNavBar() {
     };
 };
 repoNavBar();
-
 
 // our function to create a new canvas as well as all associated html elements
 const createCanvasElement = () => {
@@ -60,11 +59,12 @@ const createCanvasElement = () => {
     pieChart.setAttributeNode(id);
     chartWrapper.append(pieChart);
 };
+
 function grabDataForChart(buttonValue) {
     // assignt the repository grabbed above to repoLanguages to shorten variable name
     let matchingRepoObject = returnMatchingJsonObject(buttonValue).languageData;
     // function that assign an array of the percentages for the repo that was clicked on
-    let repoPercentagePerLang = getLanuagePercentPerRepoFromBytes(matchingRepoObject);
+    let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject);
     // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
     loadChart(repoPercentagePerLang, buttonValue);
 };
@@ -113,6 +113,7 @@ const returnArray = (arrayType, newArray, list) => {
     };
 };
 
+/**-------------------------------------------------graph options --------------------------------------- */
 function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
     // here we are setting chart font size and title size based off of screen width
     if (screenWidth >= 750) {
@@ -125,7 +126,6 @@ function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
 
     };
 };
-
 function datasetStylingOptionsAnd(data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
@@ -171,7 +171,7 @@ const datasetDataOptions = (data, labels) => {
     };
 };
 
-const datasetLabelOptions = (btnName, titleSize) => {
+const graphKeyOptions = (btnName, titleSize) => {
     return {
         title: datasetTitleOptions(btnName, titleSize),
         legend: datasetLegendOptions(),
@@ -181,7 +181,7 @@ const createDonutChart = (btnName, data, labels, titleSize) => {
     const donutChart = new Chart("repo-lang-stats", {
         type: "doughnut",
         data: datasetDataOptions(data, labels),
-        options: datasetLabelOptions(btnName, titleSize),
+        options: graphKeyOptions(btnName, titleSize),
     });
 
     return donutChart;
@@ -198,7 +198,6 @@ const loadChart = (list, btnName) => {
     setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
     // global styles for Chart
     globalStyle.defaultColor = 'white';
-
 
     createDonutChart(btnName, data, labels, titleSize);
 };
