@@ -48,7 +48,7 @@ class repositoryInformation {
     const languageListForRepo = [];
     for (const [key, value] of Object.entries(this.languageData)) {
       let percentage = (((Number(value)) / this.totalBytes) * 100).toFixed(2) + "%";
-      const languageClassObjectForRepo = { languageName: key, languagePercentage: percentage }
+      const languageClassObjectForRepo = { languageName: key, languagePercentage: percentage, totalBytes: value }
       languageListForRepo.push(languageClassObjectForRepo);
     }
     return languageListForRepo;

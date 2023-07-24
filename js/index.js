@@ -5,7 +5,7 @@ import repositoryData from "./json/repoData.json" assert { type: "json" };
 
 console.log(repositoryData);
 // 1. Language Class is constructed
-class Language {
+class Language { // DEPRECATED
     constructor(language, percentage, totalBytes) {
         this.language = language;
         this.percentage = percentage;
@@ -21,17 +21,6 @@ function countTotalBytesInRepo(languagesByteObjectArray) {
     return totalBytesInRepo;
 };
 
-// Issue #24
-function getLanuagesArrayForRepo(languageObject) {
-    let total = countTotalBytesInRepo(languageObject);
-    const languageListForRepo = [];
-    for (const [key, value] of Object.entries(languageObject)) {
-        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-        const languageClassObjectForRepo = new Language(key, percentage, value);
-        languageListForRepo.push(languageClassObjectForRepo);
-    }
-    return languageListForRepo;
-};
 
 function displayRepos(id, name) {
     const repoList = $("#repo-list");
@@ -63,14 +52,7 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 
-function grabDataForChart(buttonValue) {
-    // assignt the repository grabbed above to repoLanguages to shorten variable name
-    let matchingRepoObject = returnMatchingJsonObject(buttonValue).languageData;
-    // function that assign an array of the percentages for the repo that was clicked on
-    let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject);
-    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-    loadChart(repoPercentagePerLang, buttonValue);
-};
+
 
 function loadPieGraphOnClick() {
     $("body").on("click", ".button-list", function (e) {
@@ -88,33 +70,19 @@ loadPieGraphOnClick();
 
 // this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
 function returnMatchingJsonObject(buttonNameValue) {
-
-    let repoMatchJsonObject;
+// REPOSITORY DATA
+    let matchingRepoObject;
     // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
-    for (let i = 0; i < languageData.length; i++) {
-        if (languageData[i].repoName === buttonNameValue) {
-            repoMatchJsonObject = languageData[i];
+    for (let i = 0; i < repositoryData.length; i++) {
+        if (repositoryData[i].name === buttonNameValue) {
+            matchingRepoObject = repositoryData[i];
             break;
         };
     };
-    return repoMatchJsonObject;
+    console.log(matchingRepoObject)
+    return matchingRepoObject;
 };
 
-// function 
-const returnArray = (arrayType, newArray, list) => {
-    try {
-        for (let i = 0; i < list.length; i++) {
-            if (arrayType === "data") {
-                newArray.push(Number(list[i].totalBytes));
-            } else {
-                newArray.push(`${list[i].language} ${list[i].percentage}`);
-            }
-        }
-        return newArray;
-    } catch (error) {
-        console.error(error);
-    };
-};
 
 /**-------------------------------------------------graph options --------------------------------------- */
 function setChartFontSize() {
@@ -133,8 +101,9 @@ function setTitleSize() {
     } else if (window.screen.width <= 750) {
         return titleSize = 12;
     };
-}
+};
 function datasetStylingOptionsAnd(data) {
+    console.log(data, "inside datasetStylingOptionsAnd(data)")
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
@@ -153,10 +122,11 @@ function datasetStylingOptionsAnd(data) {
     }];
 };
 
-const datasetTitleOptions = (btnName, titleSize) => {
+const datasetTitleOptions = (repoName, titleSize) => {
+    // button name in this case is the name of the repo
     return {
         display: true,
-        text: btnName,
+        text: repoName,
         fontColor: 'white',
         fontSize: titleSize
     };
@@ -179,24 +149,63 @@ const datasetDataOptions = (data, labels) => {
     };
 };
 
-const graphKeyOptions = (btnName, titleSize) => {
+const graphKeyOptions = (repoName, titleSize) => {
     return {
-        title: datasetTitleOptions(btnName, titleSize),
+        title: datasetTitleOptions(repoName, titleSize),
         legend: datasetLegendOptions(),
     };
 };
-const createDonutChart = (btnName, data, labels, titleSize) => {
+const createDonutChart = (repoName, data, labels, titleSize) => {
     const donutChart = new Chart("repo-lang-stats", {
         type: "doughnut",
         data: datasetDataOptions(data, labels),
-        options: graphKeyOptions(btnName, titleSize),
+        options: graphKeyOptions(repoName, titleSize),
     });
 
     return donutChart;
 }
 
+// function 
+const returnArray = (arrayType, newArray, list) => { // DEPRECATED
+    try {
+        for (let i = 0; i < list.length; i++) {
+            if (arrayType === "data") {
+                newArray.push(Number(list[i].totalBytes));
+            } else {
+                newArray.push(`${list[i].language} ${list[i].percentage}`);
+            }
+        }
+        return newArray;
+    } catch (error) {
+        console.error(error);
+    };
+};
+
+// Issue #24
+function getLanuagesArrayForRepo(languageObject) { // DEPRECATED
+    let total = countTotalBytesInRepo(languageObject);
+    const languageListForRepo = [];
+    for (const [key, value] of Object.entries(languageObject)) {
+        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
+        const languageClassObjectForRepo = new Language(key, percentage, value);
+        languageListForRepo.push(languageClassObjectForRepo);
+    }
+    return languageListForRepo;
+};
+
+function grabDataForChart(buttonValue) {
+    // assignt the repository grabbed above to repoLanguages to shorten variable name
+    let matchingRepoObject = returnMatchingJsonObject(buttonValue)
+    // function that assign an array of the percentages for the repo that was clicked on
+    let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject.languageData);
+    
+    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
+    loadChart(repoPercentagePerLang, buttonValue);
+};
+
 // our create chart function 
-const loadChart = (list, btnName) => {
+const loadChart = (list, repoName) => {
+    console.log(list)
     let data = returnArray("data", [], list);
     let labels = returnArray("labels", [], list);
 
@@ -207,5 +216,5 @@ const loadChart = (list, btnName) => {
     // global styles for Chart
     globalStyle.defaultColor = 'white';
 
-    createDonutChart(btnName, data, labels, titleSize);
+    createDonutChart(repoName, data, labels, titleSize);
 };
