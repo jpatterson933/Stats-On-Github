@@ -62,7 +62,7 @@ function writeToFile(fileName, fileData) {
   });
 };
 
-const getUserRepositoryInfo = async () => {
+const getUserPublicRepoData = async () => {
   try {
     const githubUserReposQuery = 'GET /user/repos?page=1&per_page=100';
     const userRepoData = await octokit.request(githubUserReposQuery, { type: 'owner' });
@@ -72,22 +72,36 @@ const getUserRepositoryInfo = async () => {
     console.error(error);
   };
 };
-async function getUserRepositoryInformation() {
+async function requestRepoDetails(name){
+  try{
+
+    const githubRepoLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
+    const repoLanguage = await octokit.request(githubRepoLanguageQuery, { owner: 'jpatterson933', repo: name });
+    return repoLanguage;
+  } catch (error){
+    console.error(error);
+  };
+};
+
+function printCompletionPercentage(i, length){
+  const percentOfLoopCompleted = `${((i / length) * 100).toFixed(2)} % Complete`;
+  console.log(percentOfLoopCompleted);
+}
+
+async function returnUserRepositoryDetails() {
   try {
-    const publicRepoData = await getUserRepositoryInfo();
+    const publicRepoData = await getUserPublicRepoData();
     const repoInfoArray = [];
 
     for (let i = 0; i < publicRepoData.data.length; i++) {
       let { id, name, created_at } = publicRepoData.data[i];
-      const githubRepoLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
-      const repoLanguage = await octokit.request(githubRepoLanguageQuery, { owner: 'jpatterson933', repo: name });
 
-      const percentOfLoopCompleted = `${((i / publicRepoData.data.length) * 100).toFixed(2)} % Complete`;
-      console.log(percentOfLoopCompleted);
+      const repoLanguage = await requestRepoDetails(name);
+
+      printCompletionPercentage(i, publicRepoData.data.length)
 
       const newRepoObject = new repositoryInformation(id, name, created_at, repoLanguage.data);
       repoInfoArray.push(newRepoObject);
-
     }
     return repoInfoArray;
   } catch (error) {
@@ -95,13 +109,9 @@ async function getUserRepositoryInformation() {
   };
 };
 
-
 // MAIN FUNCTION --- This function is what is saving all information to be used in front end file
 const repoGrab = async () => {
-
-  // writeToFile("repoData.json", eachReposBasicInfo);
-  const userRepoInfoArray = await getUserRepositoryInformation();
-  console.log(userRepoInfoArray)
-  writeToFile("repoData.json", userRepoInfoArray);
+  const userRepositoryDetailsArray = await returnUserRepositoryDetails();
+  writeToFile("repoData.json", userRepositoryDetailsArray);
 };
 repoGrab();
