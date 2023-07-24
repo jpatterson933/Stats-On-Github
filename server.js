@@ -15,7 +15,6 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
-
 class repositoryInformation {
   constructor(id, name, creation_date, languageData) {
     this.id = id;
@@ -25,7 +24,9 @@ class repositoryInformation {
     this.readableDate = this.createReadableDate();
     this.totalBytes = this.countTotalLanguageBytesInRepo();
     this.languagesPercentForRepo = this.getPercentOfLanguageUsedInRepo()
-    
+    this.totalBytesPerLanguage = this.getTotalBytesPerLanguage();
+    this.languageLabels = this.createLanguageLabels();
+
   }
 
   createReadableDate() {
@@ -44,6 +45,7 @@ class repositoryInformation {
   };
 
 
+
   getPercentOfLanguageUsedInRepo() {
     const languageListForRepo = [];
     for (const [key, value] of Object.entries(this.languageData)) {
@@ -53,6 +55,29 @@ class repositoryInformation {
     }
     return languageListForRepo;
   };
+  getTotalBytesPerLanguage() {
+    try {
+      let newArray = [];
+      for (let i = 0; i < this.languagesPercentForRepo.length; i++) {
+        newArray.push(Number(this.languagesPercentForRepo[i].totalBytes));
+      }
+      return newArray;
+    } catch (error) {
+      console.error(error);
+    };
+  };
+
+  createLanguageLabels(){
+    try {
+      let newArray = [];
+      for (let i = 0; i < this.languagesPercentForRepo.length; i++) {
+              newArray.push(`${this.languagesPercentForRepo[i].languageName} ${this.languagesPercentForRepo[i].languagePercentage}`);
+      }
+      return newArray;
+  } catch (error) {
+      console.error(error);
+  };
+  }
 }
 
 // function to write to file that we will use --- TYPE into gitbash node server.js
@@ -72,18 +97,18 @@ const getUserPublicRepoData = async () => {
     console.error(error);
   };
 };
-async function requestRepoDetails(name){
-  try{
+async function requestRepoDetails(name) {
+  try {
 
     const githubRepoLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
     const repoLanguage = await octokit.request(githubRepoLanguageQuery, { owner: 'jpatterson933', repo: name });
     return repoLanguage;
-  } catch (error){
+  } catch (error) {
     console.error(error);
   };
 };
 
-function printCompletionPercentage(i, length){
+function printCompletionPercentage(i, length) {
   const percentOfLoopCompleted = `${((i / length) * 100).toFixed(2)} % Complete`;
   console.log(percentOfLoopCompleted);
 }

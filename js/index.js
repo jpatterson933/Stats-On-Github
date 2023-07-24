@@ -1,26 +1,6 @@
 // import our json files
-import repoData from "./json/repoData.json" assert { type: "json" };
-import languageData from "./json/chartData.json" assert { type: "json" };
+// import repoData from "./json/repoData.json" assert { type: "json" };
 import repositoryData from "./json/repoData.json" assert { type: "json" };
-
-console.log(repositoryData);
-// 1. Language Class is constructed
-class Language { // DEPRECATED
-    constructor(language, percentage, totalBytes) {
-        this.language = language;
-        this.percentage = percentage;
-        this.totalBytes = totalBytes;
-    };
-};
-// get total bytes of language - DEPRECATED
-function countTotalBytesInRepo(languagesByteObjectArray) {
-    let totalBytesInRepo = 0;
-    for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {
-        totalBytesInRepo += Number(bytes);
-    };
-    return totalBytesInRepo;
-};
-
 
 function displayRepos(id, name) {
     const repoList = $("#repo-list");
@@ -28,9 +8,9 @@ function displayRepos(id, name) {
     repoList.append(button);
 };
 function repoNavBar() {
-    for (let i = 0; i < repoData.length; i++) {
+    for (let i = 0; i < repositoryData.length; i++) {
         // loop through our json data and create buttons
-        displayRepos(repoData[i].id, repoData[i].name);
+        displayRepos(repositoryData[i].id, repositoryData[i].name);
     };
 };
 repoNavBar();
@@ -52,8 +32,6 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 
-
-
 function loadPieGraphOnClick() {
     $("body").on("click", ".button-list", function (e) {
         // function that creates our canvas element
@@ -61,7 +39,7 @@ function loadPieGraphOnClick() {
         // targeted button that was clicked
         let $btn = $(this);
         let buttonNameValue = $btn[0].name;
-        grabDataForChart(buttonNameValue)
+        grabMatchingRepoFromJson(buttonNameValue)
         // return buttonNameValue;
     });
 };
@@ -79,10 +57,8 @@ function returnMatchingJsonObject(buttonNameValue) {
             break;
         };
     };
-    console.log(matchingRepoObject)
     return matchingRepoObject;
 };
-
 
 /**-------------------------------------------------graph options --------------------------------------- */
 function setChartFontSize() {
@@ -103,7 +79,6 @@ function setTitleSize() {
     };
 };
 function datasetStylingOptionsAnd(data) {
-    console.log(data, "inside datasetStylingOptionsAnd(data)")
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
     const turtleGreen = "rgba(0, 109, 50, 1)";
@@ -117,13 +92,11 @@ function datasetStylingOptionsAnd(data) {
         borderColor: [green, turtleGreen, darkGreen, neonGreen],
         hoverBorderWidth: 6,
         hoverBorderColor: [neonGreen, green, turtleGreen, darkGreen],
-        // data that is utilizied in graph
         data: data
     }];
 };
 
 const datasetTitleOptions = (repoName, titleSize) => {
-    // button name in this case is the name of the repo
     return {
         display: true,
         text: repoName,
@@ -143,7 +116,6 @@ const datasetLegendOptions = () => {
 
 const datasetDataOptions = (data, labels) => {
     return {
-        // graph labels
         labels: labels,
         datasets: datasetStylingOptionsAnd(data)
     };
@@ -155,6 +127,7 @@ const graphKeyOptions = (repoName, titleSize) => {
         legend: datasetLegendOptions(),
     };
 };
+
 const createDonutChart = (repoName, data, labels, titleSize) => {
     const donutChart = new Chart("repo-lang-stats", {
         type: "doughnut",
@@ -163,17 +136,12 @@ const createDonutChart = (repoName, data, labels, titleSize) => {
     });
 
     return donutChart;
-}
+};
 
-// function 
-const returnArray = (arrayType, newArray, list) => { // maybe deprecate but still in use
+const languageLabels = (newArray, repoLanguageInfoArray) => {
     try {
-        for (let i = 0; i < list.length; i++) {
-            if (arrayType === "data") {
-                newArray.push(Number(list[i].totalBytes));
-            } else {
-                newArray.push(`${list[i].languageName} ${list[i].languagePercentage}`);
-            }
+        for (let i = 0; i < repoLanguageInfoArray.length; i++) {
+                newArray.push(`${repoLanguageInfoArray[i].languageName} ${repoLanguageInfoArray[i].languagePercentage}`);
         }
         return newArray;
     } catch (error) {
@@ -181,23 +149,30 @@ const returnArray = (arrayType, newArray, list) => { // maybe deprecate but stil
     };
 };
 
+function bytesPerLanguage(newArray, repoLanguageInfoArray) {
+    try {
+        for (let i = 0; i < repoLanguageInfoArray.length; i++) {
+                newArray.push(Number(repoLanguageInfoArray[i].totalBytes));
+        }
+        console.log(newArray)
+        return newArray;
+    } catch (error) {
+        console.error(error);
+    };
 
-function grabDataForChart(buttonValue) {
-    // assignt the repository grabbed above to repoLanguages to shorten variable name
-    let matchingRepoObject = returnMatchingJsonObject(buttonValue)
-    // function that assign an array of the percentages for the repo that was clicked on
-    // let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject);
-    let repoPercentagePerLang = matchingRepoObject.languagesPercentForRepo;
-    
-    // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
-    loadChart(repoPercentagePerLang, buttonValue);
+}
+
+function grabMatchingRepoFromJson(buttonValue) {
+    let matchingRepoObject = returnMatchingJsonObject(buttonValue);
+    let repoLanguageInfo = matchingRepoObject.languagesPercentForRepo;
+    loadChart(repoLanguageInfo, buttonValue);
 };
 
 // our create chart function 
-const loadChart = (list, repoName) => {
-    console.log(list)
-    let data = returnArray("data", [], list);
-    let labels = returnArray("labels", [], list);
+const loadChart = (repoLanguageInfo, repoName) => {
+    // let data = returnArray("data", [], repoLanguageInfo);
+    let data = bytesPerLanguage([], repoLanguageInfo)
+    let labels = languageLabels([], repoLanguageInfo);
 
     // global style short hand
     let globalStyle = Chart.defaults.global;
