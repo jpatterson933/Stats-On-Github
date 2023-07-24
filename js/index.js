@@ -1,6 +1,9 @@
 // import our json files
 import repoData from "./json/repoData.json" assert { type: "json" };
 import languageData from "./json/chartData.json" assert { type: "json" };
+import repositoryData from "./json/repoData.json" assert { type: "json" };
+
+console.log(repositoryData);
 // 1. Language Class is constructed
 class Language {
     constructor(language, percentage, totalBytes) {
@@ -9,7 +12,7 @@ class Language {
         this.totalBytes = totalBytes;
     };
 };
-// get total bytes of language
+// get total bytes of language - DEPRECATED
 function countTotalBytesInRepo(languagesByteObjectArray) {
     let totalBytesInRepo = 0;
     for (const [languageName, bytes] of Object.entries(languagesByteObjectArray)) {

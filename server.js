@@ -23,6 +23,7 @@ class repositoryInformation {
     this.creation_date = creation_date;
     this.languageData = languageData;
     this.totalBytes = this.countTotalLanguageBytesInRepo();
+    this.percentageLanuageUsed = this.getPercentLanguageUsedInRepo()
   }
 
   // get total bytes of language
@@ -33,6 +34,18 @@ class repositoryInformation {
     };
     return totalLanguageBytesInRepo;
   };
+
+
+  getPercentLanguageUsedInRepo() {
+    // let total = countTotalBytesInRepo(this.languageData);
+    const languageListForRepo = [];
+    for (const [key, value] of Object.entries(this.languageData)) {
+        let percentage = (((Number(value)) / this.totalBytes) * 100).toFixed(2) + "%";
+        const languageClassObjectForRepo = {languageName: key, languagePercentage: percentage}
+        languageListForRepo.push(languageClassObjectForRepo);
+    }
+    return languageListForRepo;
+};
 }
 
 // function to write to file that we will use --- TYPE into gitbash node server.js
@@ -43,7 +56,6 @@ function writeToFile(fileName, fileData) {
 };
 
 const getUserRepositoryInfo = async () => {
-  console.log('getUserRepositoryInfo');
   try {
     const githubUserReposQuery = 'GET /user/repos?page=1&per_page=100';
     const userRepoData = await octokit.request(githubUserReposQuery, { type: 'owner' });
@@ -55,9 +67,7 @@ const getUserRepositoryInfo = async () => {
 };
 async function getUserRepositoryInformation() {
   try {
-    console.log('inside try block')
     const publicRepoData = await getUserRepositoryInfo();
-    console.log(publicRepoData.data, "public repo data")
     const repoInfoArray = [];
 
     for (let i = 0; i < publicRepoData.data.length; i++) {
@@ -84,6 +94,7 @@ const repoGrab = async () => {
 
   // writeToFile("repoData.json", eachReposBasicInfo);
   const userRepoInfoArray = await getUserRepositoryInformation();
+  console.log(userRepoInfoArray)
   writeToFile("repoData.json", userRepoInfoArray);
 };
 repoGrab();
