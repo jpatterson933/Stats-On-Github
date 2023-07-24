@@ -22,8 +22,16 @@ class repositoryInformation {
     this.name = name;
     this.creation_date = creation_date;
     this.languageData = languageData;
+    this.readableDate = this.createReadableDate();
     this.totalBytes = this.countTotalLanguageBytesInRepo();
-    this.percentageLanuageUsed = this.getPercentLanguageUsedInRepo()
+    this.languagesPercentForRepo = this.getPercentOfLanguageUsedInRepo()
+    
+  }
+
+  createReadableDate() {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = new Date(this.creation_date).toLocaleDateString(undefined, options);
+    return formattedDate;
   }
 
   // get total bytes of language
@@ -36,16 +44,15 @@ class repositoryInformation {
   };
 
 
-  getPercentLanguageUsedInRepo() {
-    // let total = countTotalBytesInRepo(this.languageData);
+  getPercentOfLanguageUsedInRepo() {
     const languageListForRepo = [];
     for (const [key, value] of Object.entries(this.languageData)) {
-        let percentage = (((Number(value)) / this.totalBytes) * 100).toFixed(2) + "%";
-        const languageClassObjectForRepo = {languageName: key, languagePercentage: percentage}
-        languageListForRepo.push(languageClassObjectForRepo);
+      let percentage = (((Number(value)) / this.totalBytes) * 100).toFixed(2) + "%";
+      const languageClassObjectForRepo = { languageName: key, languagePercentage: percentage }
+      languageListForRepo.push(languageClassObjectForRepo);
     }
     return languageListForRepo;
-};
+  };
 }
 
 // function to write to file that we will use --- TYPE into gitbash node server.js
