@@ -61,7 +61,6 @@ async function getUserRepositoryInformation() {
     const repoInfoArray = [];
 
     for (let i = 0; i < publicRepoData.data.length; i++) {
-      console.log('inside for loop', publicRepoData.data[i].name)
       let { id, name, created_at } = publicRepoData.data[i];
       const githubRepoLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
       const repoLanguage = await octokit.request(githubRepoLanguageQuery, { owner: 'jpatterson933', repo: name });
@@ -73,13 +72,11 @@ async function getUserRepositoryInformation() {
       repoInfoArray.push(newRepoObject);
 
     }
-    console.log(repoInfoArray);
     return repoInfoArray;
   } catch (error) {
-    console.error(error)
-  }
-
-}
+    console.error(error);
+  };
+};
 
 
 // MAIN FUNCTION --- This function is what is saving all information to be used in front end file

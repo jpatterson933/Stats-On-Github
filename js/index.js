@@ -194,7 +194,7 @@ const loadChart = (list, btnName) => {
 
     // global style short hand
     let globalStyle = Chart.defaults.global;
-    let titleSize = 0;
+    let titleSize = 50;
     setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
     // global styles for Chart
     globalStyle.defaultColor = 'white';
