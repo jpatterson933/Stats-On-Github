@@ -138,42 +138,17 @@ const createDonutChart = (repoName, data, labels, titleSize) => {
     return donutChart;
 };
 
-const languageLabels = (newArray, repoLanguageInfoArray) => {
-    try {
-        for (let i = 0; i < repoLanguageInfoArray.length; i++) {
-                newArray.push(`${repoLanguageInfoArray[i].languageName} ${repoLanguageInfoArray[i].languagePercentage}`);
-        }
-        return newArray;
-    } catch (error) {
-        console.error(error);
-    };
-};
-
-function bytesPerLanguage(newArray, repoLanguageInfoArray) {
-    try {
-        for (let i = 0; i < repoLanguageInfoArray.length; i++) {
-                newArray.push(Number(repoLanguageInfoArray[i].totalBytes));
-        }
-        console.log(newArray)
-        return newArray;
-    } catch (error) {
-        console.error(error);
-    };
-
-}
 
 function grabMatchingRepoFromJson(buttonValue) {
     let matchingRepoObject = returnMatchingJsonObject(buttonValue);
-    let repoLanguageInfo = matchingRepoObject.languagesPercentForRepo;
-    loadChart(repoLanguageInfo, buttonValue);
+    // let repoLanguageInfo = matchingRepoObject.languagesPercentForRepo;
+    loadChart(matchingRepoObject, buttonValue);
 };
 
 // our create chart function 
-const loadChart = (repoLanguageInfo, repoName) => {
-    // let data = returnArray("data", [], repoLanguageInfo);
-    let data = bytesPerLanguage([], repoLanguageInfo)
-    let labels = languageLabels([], repoLanguageInfo);
-
+const loadChart = (matchingRepoData, repoName) => {
+    let data = matchingRepoData.totalBytesPerLanguage;
+    let labels = matchingRepoData.languageLabels;
     // global style short hand
     let globalStyle = Chart.defaults.global;
     globalStyle.defaultFontSize = setChartFontSize();
