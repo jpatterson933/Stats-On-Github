@@ -1,6 +1,6 @@
 # Stats on Github
 
-### [Live Application](https://app.netlify.com/sites/deluxe-phoenix-6759a6/overview)
+### [Live Application](https://deluxe-phoenix-6759a6.netlify.app/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
