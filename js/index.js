@@ -1,5 +1,3 @@
-// import our json files
-// import repoData from "./json/repoData.json" assert { type: "json" };
 import repositoryData from "./json/repoData.json" assert { type: "json" };
 
 function displayRepos(id, name) {
@@ -32,25 +30,8 @@ const createCanvasElement = () => {
     chartWrapper.append(pieChart);
 };
 
-function loadPieGraphOnClick() {
-    $("body").on("click", ".button-list", function (e) {
-        // function that creates our canvas element
-        createCanvasElement();
-        // targeted button that was clicked
-        let $btn = $(this);
-        let buttonNameValue = $btn[0].name;
-        grabMatchingRepoFromJson(buttonNameValue)
-        // return buttonNameValue;
-    });
-};
-
-loadPieGraphOnClick();
-
-// this function grabs the stats associated with the repo button that was clicked but utilizing the name of that button clicked
 function returnMatchingJsonObject(buttonNameValue) {
-// REPOSITORY DATA
     let matchingRepoObject;
-    // grab the language stats associate with the repo using a for loop that loops through the languageData.json file
     for (let i = 0; i < repositoryData.length; i++) {
         if (repositoryData[i].name === buttonNameValue) {
             matchingRepoObject = repositoryData[i];
@@ -134,16 +115,9 @@ const createDonutChart = (repoName, data, labels, titleSize) => {
         data: datasetDataOptions(data, labels),
         options: graphKeyOptions(repoName, titleSize),
     });
-
     return donutChart;
 };
 
-
-function grabMatchingRepoFromJson(buttonValue) {
-    let matchingRepoObject = returnMatchingJsonObject(buttonValue);
-    // let repoLanguageInfo = matchingRepoObject.languagesPercentForRepo;
-    loadChart(matchingRepoObject, buttonValue);
-};
 
 // our create chart function 
 const loadChart = (matchingRepoData, repoName) => {
@@ -155,6 +129,25 @@ const loadChart = (matchingRepoData, repoName) => {
     let titleSize = setTitleSize();
     // global styles for Chart
     globalStyle.defaultColor = 'white';
-
+    
     createDonutChart(repoName, data, labels, titleSize);
 };
+
+function grabMatchingRepoFromJson(buttonValue) {
+    let matchingRepoObject = returnMatchingJsonObject(buttonValue);
+    loadChart(matchingRepoObject, buttonValue);
+};
+
+function loadPieGraphOnClick() {
+    $("body").on("click", ".button-list", function (e) {
+        // function that creates our canvas element
+        createCanvasElement();
+        // targeted button that was clicked
+        let $btn = $(this);
+        let buttonNameValue = $btn[0].name;
+        grabMatchingRepoFromJson(buttonNameValue)
+        // return buttonNameValue;
+    });
+};
+
+loadPieGraphOnClick();

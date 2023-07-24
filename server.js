@@ -67,16 +67,16 @@ class repositoryInformation {
     };
   };
 
-  createLanguageLabels(){
+  createLanguageLabels() {
     try {
       let newArray = [];
       for (let i = 0; i < this.languagesPercentForRepo.length; i++) {
-              newArray.push(`${this.languagesPercentForRepo[i].languageName} ${this.languagesPercentForRepo[i].languagePercentage}`);
+        newArray.push(`${this.languagesPercentForRepo[i].languageName} ${this.languagesPercentForRepo[i].languagePercentage}`);
       }
       return newArray;
-  } catch (error) {
+    } catch (error) {
       console.error(error);
-  };
+    };
   }
 }
 
