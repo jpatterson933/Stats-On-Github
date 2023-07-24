@@ -166,13 +166,13 @@ const createDonutChart = (repoName, data, labels, titleSize) => {
 }
 
 // function 
-const returnArray = (arrayType, newArray, list) => { // DEPRECATED
+const returnArray = (arrayType, newArray, list) => { // maybe deprecate but still in use
     try {
         for (let i = 0; i < list.length; i++) {
             if (arrayType === "data") {
                 newArray.push(Number(list[i].totalBytes));
             } else {
-                newArray.push(`${list[i].language} ${list[i].percentage}`);
+                newArray.push(`${list[i].languageName} ${list[i].languagePercentage}`);
             }
         }
         return newArray;
@@ -181,23 +181,13 @@ const returnArray = (arrayType, newArray, list) => { // DEPRECATED
     };
 };
 
-// Issue #24
-function getLanuagesArrayForRepo(languageObject) { // DEPRECATED
-    let total = countTotalBytesInRepo(languageObject);
-    const languageListForRepo = [];
-    for (const [key, value] of Object.entries(languageObject)) {
-        let percentage = (((Number(value)) / total) * 100).toFixed(2) + "%";
-        const languageClassObjectForRepo = new Language(key, percentage, value);
-        languageListForRepo.push(languageClassObjectForRepo);
-    }
-    return languageListForRepo;
-};
 
 function grabDataForChart(buttonValue) {
     // assignt the repository grabbed above to repoLanguages to shorten variable name
     let matchingRepoObject = returnMatchingJsonObject(buttonValue)
     // function that assign an array of the percentages for the repo that was clicked on
-    let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject.languageData);
+    // let repoPercentagePerLang = getLanuagesArrayForRepo(matchingRepoObject);
+    let repoPercentagePerLang = matchingRepoObject.languagesPercentForRepo;
     
     // here we created our chart using the rpo percentage per language and the name of the button that is clicked 
     loadChart(repoPercentagePerLang, buttonValue);
