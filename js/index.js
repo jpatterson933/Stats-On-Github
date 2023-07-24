@@ -115,6 +115,7 @@ const returnArray = (arrayType, newArray, list) => {
 
 /**-------------------------------------------------graph options --------------------------------------- */
 function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
+    
     // here we are setting chart font size and title size based off of screen width
     if (screenWidth >= 750) {
         globalStyle.defaultFontSize = 22;
@@ -126,6 +127,16 @@ function setChartTextSizeFromScreenWidth(globalStyle, screenWidth, titleSize) {
 
     };
 };
+function setTitleSize(){
+        let titleSize = 0;
+        // here we are setting chart font size and title size based off of screen width
+        if (window.screen.width >= 750) {
+            return titleSize = 40;
+    
+        } else if (window.screen.width <= 750) {
+            return titleSize = 12;
+        };
+}
 function datasetStylingOptionsAnd(data) {
     const neonGreen = "rgba(57, 211, 83, 1)";
     const green = "rgba(38, 166, 65, 1)";
@@ -194,7 +205,7 @@ const loadChart = (list, btnName) => {
 
     // global style short hand
     let globalStyle = Chart.defaults.global;
-    let titleSize = 50;
+    let titleSize = setTitleSize();
     setChartTextSizeFromScreenWidth(globalStyle, window.screen.width, titleSize)
     // global styles for Chart
     globalStyle.defaultColor = 'white';
