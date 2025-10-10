@@ -2,7 +2,7 @@
   "name": "stats-on-github",
   "version": "1.0.0",
   "engines": {
-    "node": "16.x"
+    "node": "20.x"
   },
   "description": "These are my stats on github.",
   "main": "server.js",
@@ -32,9 +32,10 @@
     "jest": "^29.6.1",
     "json-loader": "^0.5.7",
     "mini-css-extract-plugin": "^2.7.6",
-    "octokit": "^1.8.1",
+    "nodemon": "^3.0.1",
+    "octokit": "^5.0.3",
     "path": "^0.12.7",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^4.15.1"
+    "webpack-dev-server": "^5.2.2"
   }
 }
