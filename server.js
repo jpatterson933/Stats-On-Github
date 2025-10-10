@@ -1,11 +1,9 @@
-/* 
+/*
   Jeffery W. Patterson
   DFBW LLC
 */
-// Backend files and Packages
 const { Octokit, App } = require("octokit");
 require('dotenv').config()
-// console.log(process.env)
 const fs = require('fs');
 const path = require('path');
 
@@ -15,7 +13,7 @@ const octokit = new Octokit({
   baseUrl: 'https://api.github.com',
 });
 
-class repositoryInformation {
+class RepositoryInformation {
   constructor(id, name, creation_date, languageData) {
     this.id = id;
     this.name = name;
@@ -35,7 +33,6 @@ class repositoryInformation {
     return formattedDate;
   }
 
-  // get total bytes of language
   countTotalLanguageBytesInRepo() {
     let totalLanguageBytesInRepo = 0;
     for (const [languageName, bytes] of Object.entries(this.languageData)) {
@@ -86,19 +83,17 @@ function writeToFile(fileName, fileData) {
   });
 };
 
-const getUserPublicRepoData = async () => {
+const getUserPublicRepositories = async () => {
   try {
     const githubUserReposQuery = 'GET /user/repos?page=1&per_page=100';
     const userRepoData = await octokit.request(githubUserReposQuery, { type: 'owner' });
-    // console.log(userRepoData)
     return userRepoData;
   } catch (error) {
     console.error(error);
   };
 };
-async function requestRepoDetails(name) {
+async function fetchRepositoryLanguages(name) {
   try {
-
     const githubRepoLanguageQuery = 'GET /repos/{owner}/{repo}/languages';
     const repoLanguage = await octokit.request(githubRepoLanguageQuery, { owner: 'jpatterson933', repo: name });
     return repoLanguage;
@@ -112,19 +107,19 @@ function printCompletionPercentage(i, length) {
   console.log(percentOfLoopCompleted);
 }
 
-async function returnUserRepositoryDetails() {
+async function getUserRepositoryDetails() {
   try {
-    const publicRepoData = await getUserPublicRepoData();
+    const publicRepoData = await getUserPublicRepositories();
     const repoInfoArray = [];
 
     for (let i = 0; i < publicRepoData.data.length; i++) {
       let { id, name, created_at } = publicRepoData.data[i];
 
-      const repoLanguage = await requestRepoDetails(name);
+      const repoLanguage = await fetchRepositoryLanguages(name);
 
       printCompletionPercentage(i, publicRepoData.data.length)
 
-      const newRepoObject = new repositoryInformation(id, name, created_at, repoLanguage.data);
+      const newRepoObject = new RepositoryInformation(id, name, created_at, repoLanguage.data);
       repoInfoArray.push(newRepoObject);
     }
     return repoInfoArray;
@@ -133,9 +128,8 @@ async function returnUserRepositoryDetails() {
   };
 };
 
-// MAIN FUNCTION --- This function is what is saving all information to be used in front end file
-const repoGrab = async () => {
-  const userRepositoryDetailsArray = await returnUserRepositoryDetails();
+const fetchAndSaveUserRepositoryData = async () => {
+  const userRepositoryDetailsArray = await getUserRepositoryDetails();
   writeToFile("repoData.json", userRepositoryDetailsArray);
 };
-repoGrab();
+fetchAndSaveUserRepositoryData();
