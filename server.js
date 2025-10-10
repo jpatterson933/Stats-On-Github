@@ -80,10 +80,9 @@ class repositoryInformation {
   }
 }
 
-// function to write to file that we will use --- TYPE into gitbash node server.js
 function writeToFile(fileName, fileData) {
-  fs.writeFile(path.join(__dirname, "/./js/json", fileName), JSON.stringify(fileData), (err) => {
-    err ? console.log(err) : console.log("100% of the Data successfully saved in js/json Directory! \n");
+  fs.writeFile(path.join(__dirname, "src/js/json", fileName), JSON.stringify(fileData), (err) => {
+    err ? console.log(err) : console.log("100% of the Data successfully saved in src/js/json Directory! \n");
   });
 };
 
