@@ -1,22 +1,21 @@
-/* multi use variables */
 :root {
-    --box: 50px;
-    --innerBox: 45px;
-    --animateTime: 2s;
+    --spinner-size: 50px;
+    --spinner-inner-size: 45px;
+    --spinner-animation-duration: 2s;
+    --spinner-color: #2ea043;
 }
 
 .box,
 .box-two {
     position: absolute;
-    background-color: rgba(57, 211, 83, 1);
-    width: var(--box);
-    height: var(--box);
+    background: linear-gradient(135deg, var(--spinner-color), #26a641);
+    width: var(--spinner-size);
+    height: var(--spinner-size);
     border-radius: 8px;
-    animation-name: spin;
-    animation-delay: var(--animateTime);
-    animation-duration: var(--animateTime);
-    animation-iteration-count: infinite;
+    animation: spinnerRotate var(--spinner-animation-duration) ease-in-out infinite;
+    animation-delay: var(--spinner-animation-duration);
     top: 34px;
+    box-shadow: 0 4px 12px rgba(46, 160, 67, 0.3);
 }
 
 .box-two {
@@ -25,19 +24,18 @@
 
 #innerbox {
     position: relative;
-    border-radius: var(--box);
-    width: var(--innerBox);
-    height: var(--innerBox);
-    background-color: rgba(0, 0, 0, 1);
-    /* kind of makes it looks like its rolling forward at 2.62px */
-    margin: 2.62px;
+    border-radius: var(--spinner-size);
+    width: var(--spinner-inner-size);
+    height: var(--spinner-inner-size);
+    background-color: #0d1117;
+    margin: 2.5px;
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0);
+@keyframes spinnerRotate {
+    0%, 100% {
+        transform: rotate(0deg);
     }
-    to {
-        transform: rotate(90deg)
+    50% {
+        transform: rotate(90deg);
     }
 }
