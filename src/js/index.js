@@ -230,13 +230,27 @@ function destroyChartForRepository(repositoryId) {
     if (chartInstance) {
         chartInstance.destroy();
         activeChartInstances.delete(repositoryId);
+        loadedCharts.delete(repositoryId);
         console.log('Chart destroyed for repository:', repositoryId);
     }
 }
 
+function shouldDestroyOffScreenChart(card) {
+    const rect = card.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const distanceFromViewport = Math.min(
+        Math.abs(rect.bottom),
+        Math.abs(rect.top - viewportHeight)
+    );
+
+    return distanceFromViewport > viewportHeight * 2;
+}
+
 function handleCardLeftViewport(card) {
-    const repositoryId = card.dataset.repoId;
-    destroyChartForRepository(repositoryId);
+    if (shouldDestroyOffScreenChart(card)) {
+        const repositoryId = card.dataset.repoId;
+        destroyChartForRepository(repositoryId);
+    }
 }
 
 function setupIntersectionObserverForLazyLoading() {
