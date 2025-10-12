@@ -3,9 +3,9 @@ import '../css/reset.css';
 import '../css/spinner.css';
 import '../css/style.css';
 
-console.log('Repository data loaded:', repositoryData.length, 'repositories');
-
 const loadedCharts = new Set();
+let currentSortOrder = 'alphabetical';
+let sortedRepositoryData = [...repositoryData];
 
 function createRepositoryCard(repository) {
     const card = document.createElement('div');
@@ -31,17 +31,40 @@ function createRepositoryCard(repository) {
     return card;
 }
 
+function sortRepositories(sortType) {
+    switch(sortType) {
+        case 'alphabetical':
+            sortedRepositoryData.sort((a, b) => a.name.localeCompare(b.name));
+            break;
+        case 'most-code':
+            sortedRepositoryData.sort((a, b) => {
+                const totalA = a.totalBytesPerLanguage.reduce((sum, val) => sum + val, 0);
+                const totalB = b.totalBytesPerLanguage.reduce((sum, val) => sum + val, 0);
+                return totalB - totalA;
+            });
+            break;
+        case 'recent':
+            sortedRepositoryData.sort((a, b) => {
+                const dateA = new Date(a.updated_at || a.pushed_at || 0);
+                const dateB = new Date(b.updated_at || b.pushed_at || 0);
+                return dateB - dateA;
+            });
+            break;
+    }
+}
+
 function renderAllRepositoryCards() {
     const container = document.getElementById('repository-cards-container');
-    console.log('Container found:', container);
-    console.log('Rendering', repositoryData.length, 'cards');
 
-    repositoryData.forEach(repository => {
+    container.innerHTML = '';
+    loadedCharts.clear();
+
+    sortedRepositoryData.forEach(repository => {
         const card = createRepositoryCard(repository);
         container.appendChild(card);
     });
 
-    console.log('All cards rendered');
+    setupIntersectionObserverForLazyLoading();
 }
 
 function createCanvasElementForCard(cardElement) {
@@ -152,20 +175,16 @@ function setupIntersectionObserverForLazyLoading() {
             if (entry.isIntersecting) {
                 const card = entry.target;
                 const repositoryId = card.dataset.repoId;
-                console.log('Card intersecting:', repositoryId);
 
                 if (!loadedCharts.has(repositoryId)) {
                     card.classList.add('is-visible');
 
                     const repository = findRepositoryById(repositoryId);
-                    console.log('Repository found:', repository);
 
                     if (repository) {
                         const canvas = createCanvasElementForCard(card);
-                        console.log('Canvas created:', canvas);
                         renderChartForRepository(canvas, repository);
                         loadedCharts.add(repositoryId);
-                        console.log('Chart rendered for:', repository.name);
                     }
                 }
 
@@ -175,18 +194,30 @@ function setupIntersectionObserverForLazyLoading() {
     }, observerConfiguration);
 
     const allRepositoryCards = document.querySelectorAll('.repository-card');
-    console.log('Observing', allRepositoryCards.length, 'cards');
     allRepositoryCards.forEach(card => observer.observe(card));
 }
 
+function setupSortControls() {
+    const sortButtons = document.querySelectorAll('.sort-btn');
+
+    sortButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const sortType = button.dataset.sort;
+
+            sortButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            currentSortOrder = sortType;
+            sortRepositories(sortType);
+            renderAllRepositoryCards();
+        });
+    });
+}
+
 function initializeApplication() {
-    console.log('Initializing application...');
-    console.log('DOM ready state:', document.readyState);
-
+    sortRepositories(currentSortOrder);
     renderAllRepositoryCards();
-    setupIntersectionObserverForLazyLoading();
-
-    console.log('Application initialized');
+    setupSortControls();
 }
 
 if (document.readyState === 'loading') {
