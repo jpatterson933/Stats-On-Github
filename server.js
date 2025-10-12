@@ -3,7 +3,7 @@
   DFBW LLC
 */
 const { Octokit, App } = require("octokit");
-require('dotenv').config()
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 
@@ -128,8 +128,14 @@ async function getUserRepositoryDetails() {
   };
 };
 
+function removeRepositoriesWithNoLanguageData(repositories) {
+  if (!repositories) return [];
+  return repositories.filter(repo => repo.totalBytes > 0);
+}
+
 const fetchAndSaveUserRepositoryData = async () => {
   const userRepositoryDetailsArray = await getUserRepositoryDetails();
-  writeToFile("repoData.json", userRepositoryDetailsArray);
+  const repositoriesWithLanguageData = removeRepositoriesWithNoLanguageData(userRepositoryDetailsArray);
+  writeToFile("repoData.json", repositoriesWithLanguageData);
 };
 fetchAndSaveUserRepositoryData();
