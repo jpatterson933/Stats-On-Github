@@ -8,7 +8,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon server.js",
+    "start": "node server/index.js",
     "serve": "node server/index.js",
     "build": "webpack",
     "seed": "npx tsx apis/github.ts"
