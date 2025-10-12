@@ -33,8 +33,33 @@ class RepositoryInformation {
   languagesPercentForRepo: LanguagePercent[];
   totalBytesPerLanguage: number[];
   languageLabels: string[];
+  stargazers_count: number;
+  forks_count: number;
+  watchers_count: number;
+  pushed_at: string;
+  updated_at: string;
+  size: number;
+  description: string | null;
+  homepage: string | null;
+  topics: string[];
+  commit_count: number;
 
-  constructor(id: number, name: string, creation_date: string, languageData: LanguageData) {
+  constructor(
+    id: number, 
+    name: string, 
+    creation_date: string, 
+    languageData: LanguageData, 
+    stargazers_count: number,
+    forks_count: number,
+    watchers_count: number,
+    pushed_at: string,
+    updated_at: string,
+    size: number,
+    description: string | null,
+    homepage: string | null,
+    topics: string[],
+    commit_count: number
+  ) {
     this.id = id;
     this.name = name;
     this.creation_date = creation_date;
@@ -44,6 +69,18 @@ class RepositoryInformation {
     this.languagesPercentForRepo = this.getPercentOfLanguageUsedInRepo();
     this.totalBytesPerLanguage = this.getTotalBytesPerLanguage();
     this.languageLabels = this.createLanguageLabels();
+    this.stargazers_count = stargazers_count;
+    this.forks_count = forks_count;
+    this.watchers_count = watchers_count;
+    this.pushed_at = pushed_at;
+    this.updated_at = updated_at;
+    this.size = size;
+    this.description = description;
+    this.homepage = homepage;
+    this.topics = topics;
+    this.commit_count = commit_count;
+    
+    
   }
 
   createReadableDate(): string {
@@ -144,6 +181,29 @@ export class GithubAPI {
     }
   }
 
+  async fetchCommitCount(name: string): Promise<number> {
+    try {
+      const githubRepoCommitsQuery = 'GET /repos/{owner}/{repo}/commits';
+      const commits = await this.octokit.request(githubRepoCommitsQuery, {
+        owner: this.owner,
+        repo: name,
+        per_page: 1,
+        page: 1
+      });
+
+      const linkHeader = commits.headers.link;
+      if (!linkHeader) {
+        return commits.data.length;
+      }
+
+      const lastPageMatch = linkHeader.match(/page=(\d+)>; rel="last"/);
+      return lastPageMatch ? parseInt(lastPageMatch[1], 10) : commits.data.length;
+    } catch (error) {
+      console.error(error);
+      return 0;
+    }
+  }
+
   printCompletionPercentage(i: number, length: number) {
     const percentOfLoopCompleted = `${((i / length) * 100).toFixed(2)} % Complete`;
     console.log(percentOfLoopCompleted);
@@ -162,13 +222,42 @@ export class GithubAPI {
       const repoInfoArray: RepositoryInformation[] = [];
 
       for (let i = 0; i < publicRepoData.data.length; i++) {
-        let { id, name, created_at } = publicRepoData.data[i];
+        const {
+          id,
+          name,
+          created_at,
+          stargazers_count,
+          forks_count,
+          watchers_count,
+          pushed_at,
+          updated_at,
+          size,
+          description,
+          homepage,
+          topics
+        } = publicRepoData.data[i];
 
         const repoLanguage = await this.fetchRepositoryLanguages(name);
+        const commitCount = await this.fetchCommitCount(name);
 
         this.printCompletionPercentage(i, publicRepoData.data.length);
 
-        const newRepoObject = new RepositoryInformation(id, name, created_at, repoLanguage.data);
+        const newRepoObject = new RepositoryInformation(
+          id, 
+          name, 
+          created_at, 
+          repoLanguage.data,
+          stargazers_count,
+          forks_count,
+          watchers_count,
+          pushed_at,
+          updated_at,
+          size,
+          description,
+          homepage,
+          topics,
+          commitCount
+        );
         repoInfoArray.push(newRepoObject);
       }
 
