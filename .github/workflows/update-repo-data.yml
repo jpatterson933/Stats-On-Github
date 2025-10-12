@@ -24,7 +24,7 @@ jobs:
 
       - name: Run seed script
         env:
-          GITHUB_API_KEY: ${{ secrets.GITHUB_API_KEY }}
+          REPO_API_KEY: ${{ secrets.REPO_API_KEY }}
         run: npm run seed
 
       - name: Commit and push if changes
