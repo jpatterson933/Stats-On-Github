@@ -3,68 +3,145 @@
 ### [Live Application](https://deluxe-phoenix-6759a6.netlify.app/)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)
 
-# Table of Contents
-1. [License MIT](#license-information)
-2. [Description](#application-description)
-3. [Languages Used](#languages-used)
-4. [Dependencies Used](#dependencies-used)
-5. [Known Issues/Errors](#known-issues/errors)
-6. [Questions](#questions)
+A visualization dashboard that displays language usage statistics across GitHub repositories using interactive doughnut charts.
 
-# License Information
+## Table of Contents
+1. [Description](#description)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Installation](#installation)
+5. [Usage](#usage)
+6. [Scripts](#scripts)
+7. [Project Structure](#project-structure)
+8. [License](#license)
+9. [Contact](#contact)
+
+## Description
+
+This application visualizes programming language statistics from GitHub repositories using the GitHub API. It fetches repository data, calculates language usage percentages, and displays them through interactive Chart.js doughnut charts with lazy loading for optimal performance.
+
+The application uses a pre-fetch strategy where repository data is pulled once via the GitHub API and stored as JSON. This approach significantly improves performance compared to making API calls on every page load.
+
+## Features
+
+- **Lazy Loading**: Charts load only when scrolled into view using Intersection Observer API
+- **Responsive Design**: Optimized for both desktop and mobile viewing
+- **Interactive Charts**: Doughnut charts with hover effects showing language distribution
+- **Data Persistence**: Repository data stored in JSON format for fast loading
+- **TypeScript Support**: Modern TypeScript implementation for data fetching
+- **Webpack Build**: Optimized bundle with code splitting and hot module replacement
+
+## Tech Stack
+
+**Frontend:**
+- HTML5, CSS3, JavaScript (ES6+)
+- Chart.js 2.9.4 - Data visualization
+- jQuery 3.5.1 - DOM manipulation
+- Webpack 5 - Module bundling
+
+**Backend:**
+- Node.js 20.x
+- Express.js 5.x - Web server
+- Octokit 5.x - GitHub API client
+
+**Development:**
+- TypeScript - Type-safe data fetching
+- Jest - Testing framework
+- Babel - JavaScript transpilation
+- dotenv - Environment variable management
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/jpatterson933/Stats-On-Github.git
+cd Stats-On-Github
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Create a `.env` file in the root directory:
+```env
+GITHUB_API_KEY=your_github_token_here
+PORT=8080
+```
+
+4. Fetch repository data:
+```bash
+npm run seed
+```
+
+5. Build the application:
+```bash
+npm run build
+```
+
+## Usage
+
+### Development
+```bash
+npm run build && npm start
+```
+Visit `http://localhost:8080` to view the application.
+
+### Updating Repository Data
+
+To refresh the repository statistics:
+```bash
+npm run seed
+```
+This fetches the latest data from GitHub and updates `src/js/json/repoData.json`.
+
+Then rebuild and restart the server:
+```bash
+npm run build && npm start
+```
+
+## Scripts
+
+- `npm start` - Start the Express server (serves built files from dist/)
+- `npm run build` - Build the application with Webpack
+- `npm run seed` - Fetch repository data from GitHub API (TypeScript)
+- `npm run update:data` - Update repository data (legacy Node.js script)
+- `npm test` - Run Jest tests
+
+## Project Structure
+
+```
+├── apis/
+│   └── github.ts          # TypeScript GitHub API client
+├── server/
+│   └── index.js           # Express server
+├── src/
+│   ├── css/               # Stylesheets
+│   ├── js/
+│   │   ├── index.js       # Main application logic
+│   │   └── json/
+│   │       └── repoData.json  # Cached repository data
+│   └── index.html         # Main HTML template
+├── dist/                  # Webpack build output
+├── server.js              # Legacy data fetching script
+├── webpack.config.js      # Webpack configuration
+└── package.json
+```
+
+## License
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[MIT License](https://www.mit.edu/~amini/LICENSE.md) Documentation
+This project is licensed under the MIT License. See the [MIT License](https://www.mit.edu/~amini/LICENSE.md) documentation for details.
 
-Please refer to license documentation for any questions regarding reusing 
-this software or any code within this application.
+## Contact
 
-[Back to Top](#table-of-contents)
+**Jeffery Patterson**
+Email: jpatterson933@ucla.edu
+GitHub: [@jpatterson933](https://github.com/jpatterson933)
 
-# Application Description
-
-This page will show you the language usage stats for each one of my repositories on github. 
-
-Last Updated: 7/13/22 - Updates will take place randomly.
-
-I created a server.js file and pulled all my data from github that I was able to store into json files using fs. I then went and created an index.js that would utilize this json data on the front end. This became a much quicker way to create this program as I only need to pull and store data a single time for it to showcase my stats.
-
-Using javascript I and graph.js, I then created a site that would show the languages used and the percentage they are used per project.
-
-I originally wanted to do an API request every single time a button was clicked but this turned out to be extremely slow. Storing and using JSON data was something I had always wanted to learn to do as I knew it was a quicker method then API calls but I never knew how to do it until this project!
-
-I love to code!
-
-[Back to Top](#table-of-contents)
-
-# Languages Used
-
-HTML, CSS, Javascript, Node.js, Chart.js, jQuery
-
-[Back to Top](#table-of-contents)
-
-# Dependencies Used
-
-    "dotenv": "^16.0.1",
-    "jest": "^29.6.1",
-    "octokit": "^1.8.1",
-    "path": "^0.12.7"
-
-
-[Back to Top](#table-of-contents)
-
-# Questions
-
-If you have any questions that have not been answered, please send me an email: jpatterson933@ucla.edu
-
-## Checkout My GitHub!
-
-[Back to Top](#table-of-contents)
-
-### [jpatterson933](https://github.com/jpatterson933)
-### [Live Application](https://jpatterson933.github.io/Stats-On-Github/)
-### [GitHub Repository](https://github.com/jpatterson933/Stats-On-Github/settings/pages)
+### Links
+- [Live Application](https://deluxe-phoenix-6759a6.netlify.app/)
+- [GitHub Repository](https://github.com/jpatterson933/Stats-On-Github)
