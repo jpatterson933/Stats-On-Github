@@ -5,7 +5,7 @@ import '../css/style.css';
 
 const loadedCharts = new Set();
 let currentSortOrder = 'alphabetical';
-let sortedRepositoryData = [...repositoryData];
+let sortedRepositoryData = [...repositoryData].filter(repo => repo.totalBytes > 0);
 
 function formatBytesToReadableSize(bytes) {
     if (bytes === 0) return '0 Bytes';
