@@ -11,7 +11,8 @@
     "start": "node server/index.js",
     "serve": "node server/index.js",
     "build": "webpack",
-    "seed": "npx tsx apis/github.ts"
+    "seed": "npx tsx apis/github.ts",
+    "update:data": "node server.js"
   },
   "repository": {
     "type": "git",

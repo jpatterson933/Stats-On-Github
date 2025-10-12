@@ -3,7 +3,7 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const BASE_API_URL = process.env.BASE_API_URL || '';
 
 // Serve static files from the dist directory (webpack build output)
