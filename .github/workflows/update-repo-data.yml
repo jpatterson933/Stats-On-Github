@@ -1,0 +1,35 @@
+name: Update Repository Data
+
+on:
+  schedule:
+    # Runs every Sunday at 11:00 PM UTC (cron format: minute hour day-of-month month day-of-week)
+    - cron: '0 23 * * 0'
+  workflow_dispatch: # Allows manual trigger from GitHub UI
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run seed script
+        env:
+          GITHUB_API_KEY: ${{ secrets.GITHUB_API_KEY }}
+        run: npm run seed
+
+      - name: Commit and push if changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/js/json/repoData.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update repository data [automated]" && git push)
