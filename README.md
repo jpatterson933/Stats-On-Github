@@ -74,7 +74,7 @@ npm install
 3. Create a `.env` file in the root directory:
 
 ```env
-GITHUB_API_KEY=your_github_token_here
+REPO_API_KEY=your_github_token_here
 PORT=8080
 ```
 

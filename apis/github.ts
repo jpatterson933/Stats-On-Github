@@ -106,12 +106,12 @@ export class GithubAPI {
   private owner: string;
 
   constructor() {
-    if (!process.env.GITHUB_API_KEY) {
-      throw new Error("GITHUB_API_KEY is not defined in environment variables");
+    if (!process.env.REPO_API_KEY) {
+      throw new Error("REPO_API_KEY is not defined in environment variables");
     }
 
     this.octokit = new Octokit({
-      auth: process.env.GITHUB_API_KEY,
+      auth: process.env.REPO_API_KEY,
       userAgent: "Jeff's Stats",
       baseUrl: 'https://api.github.com',
     });
