@@ -8,6 +8,7 @@
 A visualization dashboard that displays language usage statistics across GitHub repositories using interactive doughnut charts.
 
 ## Table of Contents
+
 1. [Description](#description)
 2. [Features](#features)
 3. [Tech Stack](#tech-stack)
@@ -36,17 +37,20 @@ The application uses a pre-fetch strategy where repository data is pulled once v
 ## Tech Stack
 
 **Frontend:**
+
 - HTML5, CSS3, JavaScript (ES6+)
 - Chart.js 2.9.4 - Data visualization
 - jQuery 3.5.1 - DOM manipulation
 - Webpack 5 - Module bundling
 
 **Backend:**
+
 - Node.js 20.x
 - Express.js 5.x - Web server
 - Octokit 5.x - GitHub API client
 
 **Development:**
+
 - TypeScript - Type-safe data fetching
 - Jest - Testing framework
 - Babel - JavaScript transpilation
@@ -55,28 +59,33 @@ The application uses a pre-fetch strategy where repository data is pulled once v
 ## Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/jpatterson933/Stats-On-Github.git
 cd Stats-On-Github
 ```
 
 2. Install dependencies:
+
 ```bash
 npm install
 ```
 
 3. Create a `.env` file in the root directory:
+
 ```env
 GITHUB_API_KEY=your_github_token_here
 PORT=8080
 ```
 
 4. Fetch repository data:
+
 ```bash
 npm run seed
 ```
 
 5. Build the application:
+
 ```bash
 npm run build
 ```
@@ -84,20 +93,25 @@ npm run build
 ## Usage
 
 ### Development
+
 ```bash
 npm run build && npm start
 ```
+
 Visit `http://localhost:8080` to view the application.
 
 ### Updating Repository Data
 
 To refresh the repository statistics:
+
 ```bash
 npm run seed
 ```
+
 This fetches the latest data from GitHub and updates `src/js/json/repoData.json`.
 
 Then rebuild and restart the server:
+
 ```bash
 npm run build && npm start
 ```
@@ -139,9 +153,10 @@ This project is licensed under the MIT License. See the [MIT License](https://ww
 ## Contact
 
 **Jeffery Patterson**
-Email: jpatterson933@ucla.edu
+Email: designframebuildweb@gmail.com
 GitHub: [@jpatterson933](https://github.com/jpatterson933)
 
 ### Links
-- [Live Application](https://deluxe-phoenix-6759a6.netlify.app/)
+
+- [Live Application](https://stats-on-github-production.up.railway.app//)
 - [GitHub Repository](https://github.com/jpatterson933/Stats-On-Github)
