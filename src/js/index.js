@@ -6,6 +6,20 @@ import '../css/style.css';
 console.log('Repository data loaded:', repositoryData.length, 'repositories');
 
 const loadedCharts = new Set();
+const activeChartInstances = new Map();
+
+function repositoryHasLanguageData(repository) {
+    return repository.totalBytes > 0 &&
+           repository.languageLabels.length > 0 &&
+           repository.totalBytesPerLanguage.length > 0;
+}
+
+function filterRepositoriesWithData(repositories) {
+    return repositories.filter(repositoryHasLanguageData);
+}
+
+const repositoriesWithData = filterRepositoriesWithData(repositoryData);
+console.log('Repositories with data:', repositoriesWithData.length, 'of', repositoryData.length);
 
 function createRepositoryCard(repository) {
     const card = document.createElement('div');
@@ -34,9 +48,9 @@ function createRepositoryCard(repository) {
 function renderAllRepositoryCards() {
     const container = document.getElementById('repository-cards-container');
     console.log('Container found:', container);
-    console.log('Rendering', repositoryData.length, 'cards');
+    console.log('Rendering', repositoriesWithData.length, 'cards');
 
-    repositoryData.forEach(repository => {
+    repositoriesWithData.forEach(repository => {
         const card = createRepositoryCard(repository);
         container.appendChild(card);
     });
@@ -50,14 +64,34 @@ function createCanvasElementForCard(cardElement) {
 
     const canvas = document.createElement('canvas');
     canvas.className = 'repository-card-canvas';
+    canvas.setAttribute('role', 'img');
 
     chartWrapper.appendChild(canvas);
 
     return canvas;
 }
 
+function displayChartRenderingError(cardElement, errorMessage) {
+    const chartWrapper = cardElement.querySelector('.repository-card-chart-wrapper');
+    chartWrapper.innerHTML = `
+        <div class="repository-card-chart-error">
+            <span class="error-icon">⚠️</span>
+            <p>Unable to load chart</p>
+            <small>${errorMessage}</small>
+        </div>
+    `;
+}
+
+function generateAccessibleChartDescription(repository) {
+    const languageList = repository.languageLabels
+        .map((lang, index) => `${lang}: ${repository.totalBytesPerLanguage[index]} bytes`)
+        .join(', ');
+
+    return `Language distribution for ${repository.name}. ${languageList}`;
+}
+
 function findRepositoryById(repositoryId) {
-    return repositoryData.find(repo => repo.id == repositoryId);
+    return repositoriesWithData.find(repo => repo.id == repositoryId);
 }
 
 function determineChartFontSize() {
@@ -137,7 +171,72 @@ function renderChartForRepository(canvas, repository) {
     Chart.defaults.global.defaultFontSize = determineChartFontSize();
     Chart.defaults.global.defaultFontColor = '#e6edf3';
 
+    const accessibleDescription = generateAccessibleChartDescription(repository);
+    canvas.setAttribute('aria-label', accessibleDescription);
+
     return new Chart(canvas, chartConfiguration);
+}
+
+function renderChartWithErrorHandling(canvas, repository, cardElement) {
+    try {
+        const chartInstance = renderChartForRepository(canvas, repository);
+        activeChartInstances.set(repository.id, chartInstance);
+        return true;
+    } catch (error) {
+        console.error('Chart rendering failed for', repository.name, error);
+        displayChartRenderingError(cardElement, error.message);
+        return false;
+    }
+}
+
+function scheduleChartRenderingForCard(card, repository) {
+    requestAnimationFrame(() => {
+        card.classList.add('is-visible');
+
+        const canvas = createCanvasElementForCard(card);
+        console.log('Canvas created:', canvas);
+
+        const renderingSucceeded = renderChartWithErrorHandling(canvas, repository, card);
+
+        if (renderingSucceeded) {
+            loadedCharts.add(repository.id);
+            console.log('Chart rendered for:', repository.name);
+        }
+    });
+}
+
+function handleCardBecameVisible(card) {
+    const repositoryId = card.dataset.repoId;
+    console.log('Card intersecting:', repositoryId);
+
+    if (loadedCharts.has(repositoryId)) {
+        return;
+    }
+
+    const repository = findRepositoryById(repositoryId);
+    console.log('Repository found:', repository);
+
+    if (!repository) {
+        displayChartRenderingError(card, 'Repository data not found');
+        return;
+    }
+
+    scheduleChartRenderingForCard(card, repository);
+}
+
+function destroyChartForRepository(repositoryId) {
+    const chartInstance = activeChartInstances.get(repositoryId);
+
+    if (chartInstance) {
+        chartInstance.destroy();
+        activeChartInstances.delete(repositoryId);
+        console.log('Chart destroyed for repository:', repositoryId);
+    }
+}
+
+function handleCardLeftViewport(card) {
+    const repositoryId = card.dataset.repoId;
+    destroyChartForRepository(repositoryId);
 }
 
 function setupIntersectionObserverForLazyLoading() {
@@ -149,27 +248,12 @@ function setupIntersectionObserverForLazyLoading() {
 
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
+            const card = entry.target;
+
             if (entry.isIntersecting) {
-                const card = entry.target;
-                const repositoryId = card.dataset.repoId;
-                console.log('Card intersecting:', repositoryId);
-
-                if (!loadedCharts.has(repositoryId)) {
-                    card.classList.add('is-visible');
-
-                    const repository = findRepositoryById(repositoryId);
-                    console.log('Repository found:', repository);
-
-                    if (repository) {
-                        const canvas = createCanvasElementForCard(card);
-                        console.log('Canvas created:', canvas);
-                        renderChartForRepository(canvas, repository);
-                        loadedCharts.add(repositoryId);
-                        console.log('Chart rendered for:', repository.name);
-                    }
-                }
-
-                observer.unobserve(card);
+                handleCardBecameVisible(card);
+            } else {
+                handleCardLeftViewport(card);
             }
         });
     }, observerConfiguration);
