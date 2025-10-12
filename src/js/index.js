@@ -7,6 +7,41 @@ const loadedCharts = new Set();
 let currentSortOrder = 'alphabetical';
 let sortedRepositoryData = [...repositoryData];
 
+function formatBytesToReadableSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+
+    const kilobyte = 1024;
+    const megabyte = kilobyte * 1024;
+
+    if (bytes >= megabyte) {
+        return `${(bytes / megabyte).toFixed(2)} MB`;
+    }
+
+    if (bytes >= kilobyte) {
+        return `${(bytes / kilobyte).toFixed(2)} KB`;
+    }
+
+    return `${bytes} Bytes`;
+}
+
+function extractPrimaryLanguage(repository) {
+    if (!repository.languagesPercentForRepo || repository.languagesPercentForRepo.length === 0) {
+        return 'No languages detected';
+    }
+
+    return repository.languagesPercentForRepo[0].languageName;
+}
+
+function countLanguagesInRepository(repository) {
+    return repository.languagesPercentForRepo ? repository.languagesPercentForRepo.length : 0;
+}
+
+function formatUpdatedDate(dateString) {
+    const updatedDate = new Date(dateString);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return updatedDate.toLocaleDateString(undefined, options);
+}
+
 function createRepositoryCard(repository) {
     const card = document.createElement('div');
     card.className = 'repository-card';
@@ -19,7 +54,38 @@ function createRepositoryCard(repository) {
     title.className = 'repository-card-title';
     title.textContent = repository.name;
 
+    const metadataContainer = document.createElement('div');
+    metadataContainer.className = 'repository-card-metadata';
+
+    const creationDate = document.createElement('span');
+    creationDate.className = 'repository-metadata-item';
+    creationDate.innerHTML = `<strong>Created:</strong> ${repository.readableDate}`;
+
+    const totalSize = document.createElement('span');
+    totalSize.className = 'repository-metadata-item';
+    totalSize.innerHTML = `<strong>Size:</strong> ${formatBytesToReadableSize(repository.totalBytes)}`;
+
+    const primaryLanguage = document.createElement('span');
+    primaryLanguage.className = 'repository-metadata-item';
+    primaryLanguage.innerHTML = `<strong>Primary:</strong> ${extractPrimaryLanguage(repository)}`;
+
+    const languageCount = document.createElement('span');
+    languageCount.className = 'repository-metadata-item';
+    const languagesText = countLanguagesInRepository(repository) === 1 ? 'language' : 'languages';
+    languageCount.innerHTML = `<strong>Languages:</strong> ${countLanguagesInRepository(repository)} ${languagesText}`;
+
+    const lastUpdated = document.createElement('span');
+    lastUpdated.className = 'repository-metadata-item';
+    lastUpdated.innerHTML = `<strong>Last Updated:</strong> ${formatUpdatedDate(repository.updated_at)}`;
+
+    metadataContainer.appendChild(creationDate);
+    metadataContainer.appendChild(lastUpdated);
+    metadataContainer.appendChild(totalSize);
+    metadataContainer.appendChild(primaryLanguage);
+    metadataContainer.appendChild(languageCount);
+
     header.appendChild(title);
+    header.appendChild(metadataContainer);
 
     const chartWrapper = document.createElement('div');
     chartWrapper.className = 'repository-card-chart-wrapper';
@@ -45,8 +111,8 @@ function sortRepositories(sortType) {
             break;
         case 'recent':
             sortedRepositoryData.sort((a, b) => {
-                const dateA = new Date(a.updated_at || a.pushed_at || 0);
-                const dateB = new Date(b.updated_at || b.pushed_at || 0);
+                const dateA = new Date(a.updated_at || 0);
+                const dateB = new Date(b.updated_at || 0);
                 return dateB - dateA;
             });
             break;
@@ -116,7 +182,7 @@ function createChartDatasetConfiguration(languageData) {
 
 function configureChartTitle(repositoryName, fontSize) {
     return {
-        display: true,
+        display: false,
         text: repositoryName,
         fontColor: '#e6edf3',
         fontSize: fontSize
