@@ -6,12 +6,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const BASE_API_URL = process.env.BASE_API_URL || '';
 
-// Serve static files from the src directory
-app.use(express.static(path.join(__dirname, '..', 'src')));
+// Serve static files from the dist directory (webpack build output)
+app.use(express.static(path.join(__dirname, '..', 'dist')));
 
 // Serve index.html at root
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'src', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'dist', 'index.html'));
 });
 
 // Health check endpoint
