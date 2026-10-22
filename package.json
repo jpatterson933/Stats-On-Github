@@ -2,7 +2,7 @@
   "name": "stats-on-github",
   "version": "1.0.0",
   "engines": {
-    "node": "20.x"
+    "node": ">=22.23.4"
   },
   "description": "These are my stats on github.",
   "main": "server.js",
